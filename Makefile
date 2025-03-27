@@ -6,16 +6,17 @@ RM			= rm -f
 SRCS_DIR	= src
 OBJS_DIR	= obj
 
-SRCS		= $(SRCS_DIR)/main.cpp
-OBJS		= $(OBJS_DIR)/main.o
+SRCS_FILES	= main.cpp
+
+SRCS		= $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
+OBJS		= $(addprefix $(OBJS_DIR)/, $(SRCS_FILES:.cpp=.o))
 
 all:		$(NAME)
 
 $(OBJS_DIR):
 			mkdir -p $(OBJS_DIR)
 
-
-$(OBJS_DIR)/main.o: $(SRCS_DIR)/main.cpp | $(OBJS_DIR)
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp | $(OBJS_DIR)
 			$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(NAME):	$(OBJS)
