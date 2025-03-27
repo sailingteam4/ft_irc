@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
         std::cerr << "Error: Password cannot be empty" << std::endl;
         return 1;
     }
+
+    Server server(port, password);
     
     return 0;
 }

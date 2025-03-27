@@ -1,12 +1,12 @@
 NAME		= ircserv
 CXX			= c++
-CXXFLAGS	= -Wall -Wextra -Werror -std=c++98 -I./includes
+CXXFLAGS	= -Wall -Wextra -Werror -std=c++98 -g -I./includes
 RM			= rm -f
 
 SRCS_DIR	= src
 OBJS_DIR	= obj
 
-SRCS_FILES	= main.cpp
+SRCS_FILES	= main.cpp Server.cpp
 
 SRCS		= $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 OBJS		= $(addprefix $(OBJS_DIR)/, $(SRCS_FILES:.cpp=.o))
