@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+         #
+#    By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/14 23:42:46 by mbico             #+#    #+#              #
-#    Updated: 2025/03/26 16:03:16 by mbico            ###   ########.fr        #
+#    Updated: 2025/03/28 13:54:34 by nrontey          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ $(NAME): $(OBJS)
 
 clean:
 	@echo "$(RED)Removing object...$(NC)"
-	@rm *.o
+	@rm srcs/*.o
 
 fclean: clean
 	@echo "$(RED)Removing $(NAME)...$(NC)"
