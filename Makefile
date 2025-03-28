@@ -1,33 +1,48 @@
-NAME		= ircserv
-CXX			= c++
-CXXFLAGS	= -Wall -Wextra -Werror -std=c++98 -g -I./includes
-RM			= rm -f
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/01/14 23:42:46 by mbico             #+#    #+#              #
+#    Updated: 2025/03/26 16:03:16 by mbico            ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-SRCS_DIR	= src
-OBJS_DIR	= obj
+CC = c++
+CFLAGS = -std=c++98 -Wall -Werror -Wextra
+NAME = irc
 
-SRCS_FILES	= main.cpp Server.cpp
+SRCS = $(shell find ./srcs -name '*.cpp')
+HDRS = ./hdrs
+OBJS = $(SRCS:%.cpp=%.o)
 
-SRCS		= $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
-OBJS		= $(addprefix $(OBJS_DIR)/, $(SRCS_FILES:.cpp=.o))
+RED = \033[0;31m
+GREEN = \033[0;34m
+YELLOW = \033[1;33m
+PURPLE = \033[0;35m
+NC = \033[0m
 
-all:		$(NAME)
+all: $(NAME)
 
-$(OBJS_DIR):
-			mkdir -p $(OBJS_DIR)
+$(NAME): $(OBJS)
+	@$(CC) $(CFLAGS) $^ -o $(NAME) -I $(HDRS)
+	@echo "$(GREEN)$(NAME) compilation successful !$(NC)"
 
-$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp | $(OBJS_DIR)
-			$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(NAME):	$(OBJS)
-			$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
+%.o: %.cpp
+	@mkdir -p $(@D)
+	@echo "$(YELLOW)Compiling $(notdir $<)...$(NC)"
+	@$(CC) $(CFLAGS) -c $< -o $@ -I $(HDRS)
 
 clean:
-			$(RM) -r $(OBJS_DIR)
+	@echo "$(RED)Removing object...$(NC)"
+	@rm *.o
 
-fclean:		clean
-			$(RM) $(NAME)
+fclean: clean
+	@echo "$(RED)Removing $(NAME)...$(NC)"
+	@rm -f $(NAME)
+	
+re: fclean all
 
-re:			fclean all
-
-.PHONY:		all clean fclean re
+.PHONY: all clean fclean re
