@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
         std::cout << host << " connected on " << ntohs(client.sin_port) << std::endl; // Convertit le numéro de port du réseau à l'hôte byte par byte
     }
 
-    char buf[4096]; // Tampon pour stocker les données reçues
+    char buf[4096]; // Temp pour stocker les données reçues
     while (true)
     {
         memset(buf, 0, 4096); //clear buffer
