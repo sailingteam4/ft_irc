@@ -10,6 +10,19 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
+long stoi(const char *s)
+{
+    long i;
+    i = 0;
+    while(*s >= '0' && *s <= '9')
+    {
+        i = i * 10 + (*s - '0');
+        s++;
+    }
+    return i;
+}
+
+
 int main(int argc, char *argv[])
 {
     if (argc != 3)
@@ -37,9 +50,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    int nb_port = stoi(argv[1]);
+
     sockaddr_in hint;
     hint.sin_family = AF_INET; // IPv4
-    hint.sin_port = htons(54000); // Convertit le numéro de port en ordre d'octets réseau car l'ordre des octets diffère selon les machines
+    hint.sin_port = htons(nb_port); // Convertit le numéro de port en ordre d'octets réseau car l'ordre des octets diffère selon les machines
     inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr); // Convertit l'adresse IP de la forme chaîne à la forme binaire car l'API socket utilise la forme binaire pour les adresses IP
 
     if (bind(listening, (sockaddr*)&hint, sizeof(hint)) == -1)
