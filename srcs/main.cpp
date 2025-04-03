@@ -53,9 +53,9 @@ int main(int argc, char *argv[])
     int nb_port = stoi(argv[1]);
 
     sockaddr_in hint;
-    hint.sin_family = AF_INET; // IPv4
-    hint.sin_port = htons(nb_port); // Convertit le numéro de port en ordre d'octets réseau car l'ordre des octets diffère selon les machines
-    inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr); // Convertit l'adresse IP de la forme chaîne à la forme binaire car l'API socket utilise la forme binaire pour les adresses IP
+    hint.sin_family = AF_INET;
+    hint.sin_port = htons(nb_port);
+    inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
 
     if (bind(listening, (sockaddr*)&hint, sizeof(hint)) == -1)
     {
@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
 
     sockaddr_in client;
     socklen_t clientSize = sizeof(client);
-    char host[NI_MAXHOST]; // Nom distant du client*
-    char service[NI_MAXSERV]; // Service (port) sur lequel le client se connecte
+    char host[NI_MAXHOST];
+    char service[NI_MAXSERV];
 
     std::cout << "Waiting for a connection..." << std::endl;
     int clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
@@ -83,10 +83,10 @@ int main(int argc, char *argv[])
         return 1;
     }
     
-    close(listening); // Ferme le socket d'écoute car nous n'en avons plus besoin
+    close(listening);
 
-    memset(host, 0, NI_MAXHOST); // Efface la variable host
-    memset(service, 0, NI_MAXSERV); // Efface la variable service
+    memset(host, 0, NI_MAXHOST);
+    memset(service, 0, NI_MAXSERV);
 
     int result = getnameinfo((sockaddr*)&client, sizeof(client), host, NI_MAXHOST, service, NI_MAXSERV, 0);
     if (result)
@@ -95,15 +95,15 @@ int main(int argc, char *argv[])
     }
     else
     {
-        inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST); // Convertit l'adresse IP de la forme binaire à la forme chaîne
-        std::cout << host << " connected on " << ntohs(client.sin_port) << std::endl; // Convertit le numéro de port du réseau à l'hôte byte par byte
+        inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
+        std::cout << host << " connected on " << ntohs(client.sin_port) << std::endl;
     }
 
-    char buf[4096]; // Temp pour stocker les données reçues
+    char buf[4096];
     while (true)
     {
-        memset(buf, 0, 4096); //clear buffer
-        int bytesReceived = recv(clientSocket, buf, 4096, 0); // Reçoit des données du client
+        memset(buf, 0, 4096);
+        int bytesReceived = recv(clientSocket, buf, 4096, 0);
         if (bytesReceived == -1)
         {
             std::cerr << "Error: Could not receive data" << std::endl;
@@ -114,13 +114,13 @@ int main(int argc, char *argv[])
             std::cout << "Client disconnected" << std::endl;
             break;
         }
-        std::cout << "Received: " << std::string(buf, 0, bytesReceived) << std::endl; // Affiche les données reçues
+        std::cout << "Received: " << std::string(buf, 0, bytesReceived) << std::endl;
         
 
-        send(clientSocket, buf, bytesReceived + 1, 0); // Envoie les données reçues au client
+        send(clientSocket, buf, bytesReceived + 1, 0);
     }
 
-    close(clientSocket); // Ferme le socket client
+    close(clientSocket);
     std::cout << "Server shutting down..." << std::endl;
 
     return 0;
