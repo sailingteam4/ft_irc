@@ -180,10 +180,9 @@ int main(int argc, char *argv[])
                     {
                         std::string message(buf, 0, bytesReceived);
                         std::cout << "Received from socket " << i << ": " << message << std::endl;
-                        
-                        send(i, buf, bytesReceived, 0);
-                        
-                        // exec
+
+						std::string response = "PONG :ping";
+						send(i, response.c_str(), response.size(), 0);
                     }
                 }
             }
