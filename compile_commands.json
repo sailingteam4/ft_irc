@@ -1,0 +1,38 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++98",
+      "-Wall",
+      "-Werror",
+      "-Wextra",
+      "-c",
+      "-I",
+      "./hdrs",
+      "-o",
+      "srcs/main.o",
+      "srcs/main.cpp"
+    ],
+    "directory": "/home/mateo/ft_irc",
+    "file": "/home/mateo/ft_irc/srcs/main.cpp",
+    "output": "/home/mateo/ft_irc/srcs/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-std=c++98",
+      "-Wall",
+      "-Werror",
+      "-Wextra",
+      "-c",
+      "-I",
+      "./hdrs",
+      "-o",
+      "srcs/Server.o",
+      "srcs/Server.cpp"
+    ],
+    "directory": "/home/mateo/ft_irc",
+    "file": "/home/mateo/ft_irc/srcs/Server.cpp",
+    "output": "/home/mateo/ft_irc/srcs/Server.o"
+  }
+]
