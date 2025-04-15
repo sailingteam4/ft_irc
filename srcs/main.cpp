@@ -9,6 +9,10 @@
 #include <iostream>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <sys/select.h>
+#include <fcntl.h>
+#include <vector>
+#include <map>
 
 long stoi(const char *s)
 {
@@ -21,7 +25,6 @@ long stoi(const char *s)
     }
     return i;
 }
-
 
 int main(int argc, char *argv[])
 {
@@ -50,6 +53,13 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    int yes = 1;
+    if (setsockopt(listening, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1)
+    {
+        std::cerr << "Error: Failed to set socket options" << std::endl;
+        return 1;
+    }
+
     int nb_port = stoi(argv[1]);
 
     sockaddr_in hint;
@@ -69,58 +79,193 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    std::vector<int> client_sockets;
+	std::map<int, std::string> client_nicknames; 
+    
+    fd_set master;
+    fd_set read_fds;
+    
+    FD_ZERO(&master);
+    FD_ZERO(&read_fds);
+    
+    FD_SET(listening, &master);
+    
+    int fdmax = listening;
 
-    sockaddr_in client;
-    socklen_t clientSize = sizeof(client);
-    char host[NI_MAXHOST];
-    char service[NI_MAXSERV];
+    std::cout << "Server is running on port " << port << std::endl;
+    std::cout << "Waiting for connections..." << std::endl;
 
-    std::cout << "Waiting for a connection..." << std::endl;
-    int clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
-    if (clientSocket == -1)
+    while (true)
     {
-        std::cerr << "Error: Could not accept connection" << std::endl;
-        return 1;
+        read_fds = master;
+        
+        if (select(fdmax + 1, &read_fds, NULL, NULL, NULL) == -1)
+        {
+            std::cerr << "Error: select() failed" << std::endl;
+            break;
+        }
+        
+        for (int i = 0; i <= fdmax; i++)
+        {
+            if (FD_ISSET(i, &read_fds))
+            {
+                // Nouvelle connexion
+                if (i == listening)
+                {
+                    sockaddr_in client;
+                    socklen_t clientSize = sizeof(client);
+                    
+                    int newfd = accept(listening, (sockaddr*)&client, &clientSize);
+                    if (newfd == -1)
+                    {
+                        std::cerr << "Error: Could not accept connection" << std::endl;
+                    }
+                    else
+                    {
+                        FD_SET(newfd, &master);
+                        if (newfd > fdmax)
+                        {
+                            fdmax = newfd;
+                        }
+                        
+                        client_sockets.push_back(newfd);
+                        
+                        char host[NI_MAXHOST];
+                        char service[NI_MAXSERV];
+                        memset(host, 0, NI_MAXHOST);
+                        memset(service, 0, NI_MAXSERV);
+                        
+                        int result = getnameinfo((sockaddr*)&client, sizeof(client), 
+                                               host, NI_MAXHOST, 
+                                               service, NI_MAXSERV, 0);
+                        if (result == 0)
+                        {
+                            std::cout << host << " connected on " << service << std::endl;
+                        }
+                        else
+                        {
+                            inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
+                            std::cout << host << " connected on port " << ntohs(client.sin_port) << std::endl;
+                        }
+                        
+                        std::cout << "New connection: socket fd=" << newfd 
+                                 << ", ip=" << host << std::endl;
+
+						std::string welcomeMessage = "SALUT GROS BG !\n";
+						send(newfd, welcomeMessage.c_str(), welcomeMessage.size(), 0);
+                    }
+                }
+				// Client qui envoie des données
+                else
+                {
+                    char buf[4096];
+                    memset(buf, 0, 4096);
+                    
+                    int bytesReceived = recv(i, buf, 4096, 0);
+                    if (bytesReceived <= 0)
+                    {
+                        if (bytesReceived == 0)
+                        {
+                            std::cout << "Client socket " << i << " disconnected" << std::endl;
+                        }
+                        else
+                        {
+                            std::cerr << "Error: Could not receive data from client socket " << i << std::endl;
+                        }
+                        for (std::vector<int>::iterator it = client_sockets.begin(); it != client_sockets.end(); ++it)
+                        {
+                            if (*it == i)
+                            {
+                                client_sockets.erase(it);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        std::string message(buf, 0, bytesReceived);
+                        std::cout << "Received from socket " << i << ": " << message << std::endl;
+
+						// BASIC handling of commands juste pour tester parce que flemme
+
+						if (message.find("PING") != std::string::npos)
+						{
+							std::string response = "PONG : " + message.substr(5);
+							send(i, response.c_str(), response.size(), 0);
+						}
+
+						else if (message.find("QUIT") != std::string::npos)
+						{
+							std::string response = "Bye bye !\n";
+							send(i, response.c_str(), response.size(), 0);
+							close(i);
+							FD_CLR(i, &master);
+							for (std::vector<int>::iterator it = client_sockets.begin(); it != client_sockets.end(); ++it)
+							{
+								if (*it == i)
+								{
+									client_sockets.erase(it);
+									break;
+								}
+							}
+							std::cout << "Client socket " << i << " disconnected" << std::endl;
+						}
+
+						else if (message.find("NICK") != std::string::npos)
+						{
+							std::string nickname = message.substr(5);
+							nickname.erase(nickname.find("\r")); // Supprimer les caractères de fin de ligne
+							client_nicknames[i] = nickname;
+
+							std::string response = "NICK command received. Your nickname is now " + nickname + "\n";
+							send(i, response.c_str(), response.size(), 0);
+
+							std::cout << "Client socket " << i << " set nickname to: " << nickname << std::endl;
+						}
+
+						// vas-y jvais essayer de faire croire au serveur qu'il y a un channel
+						// pour test genre simuler une reponse
+
+						else if (message.find("JOIN") != std::string::npos)
+						{
+							size_t pos = message.find("JOIN") + 5;
+							std::string channel = message.substr(pos);
+							channel.erase(channel.find("\r"));
+						
+							std::string nickname = client_nicknames[i];
+						
+							std::string joinMessage = ":" + nickname + "!user@localhost JOIN :" + channel + "\r\n";
+							send(i, joinMessage.c_str(), joinMessage.size(), 0);
+						
+							std::string response = ":" + std::string("irc.example.com") + " 331 " + nickname + " " + channel + " :No topic is set\r\n";
+							send(i, response.c_str(), response.size(), 0);
+						
+							response = ":" + std::string("irc.example.com") + " 353 " + nickname + " = " + channel + " :@" + nickname + "\r\n";
+							send(i, response.c_str(), response.size(), 0);
+						
+							response = ":" + std::string("irc.example.com") + " 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n";
+							send(i, response.c_str(), response.size(), 0);
+						
+							std::cout << "Client " << nickname << " joined channel: " << channel << std::endl;
+						}
+
+						else
+						{
+							// la faudra gerer c'est quand une commande n'est pas reconnue
+						}
+
+                    }
+                }
+            }
+        }
+    }
+    
+    for (std::vector<int>::iterator it = client_sockets.begin(); it != client_sockets.end(); ++it)
+    {
+        close(*it);
     }
     
     close(listening);
-
-    memset(host, 0, NI_MAXHOST);
-    memset(service, 0, NI_MAXSERV);
-
-    int result = getnameinfo((sockaddr*)&client, sizeof(client), host, NI_MAXHOST, service, NI_MAXSERV, 0);
-    if (result)
-    {
-        std::cout << host << " connected on " << service << std::endl;
-    }
-    else
-    {
-        inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
-        std::cout << host << " connected on " << ntohs(client.sin_port) << std::endl;
-    }
-
-    char buf[4096];
-    while (true)
-    {
-        memset(buf, 0, 4096);
-        int bytesReceived = recv(clientSocket, buf, 4096, 0);
-        if (bytesReceived == -1)
-        {
-            std::cerr << "Error: Could not receive data" << std::endl;
-            break;
-        }
-        else if (bytesReceived == 0)
-        {
-            std::cout << "Client disconnected" << std::endl;
-            break;
-        }
-        std::cout << "Received: " << std::string(buf, 0, bytesReceived) << std::endl;
-        
-
-        send(clientSocket, buf, bytesReceived + 1, 0);
-    }
-
-    close(clientSocket);
     std::cout << "Server shutting down..." << std::endl;
 
     return 0;
