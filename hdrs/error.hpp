@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 15:38:51 by mbico             #+#    #+#             */
-/*   Updated: 2025/04/14 19:23:23 by mateo            ###   ########.fr       */
+/*   Updated: 2025/04/15 21:04:28 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ enum	errno_irc_code {
 
 extern	errno_irc_code	errno_irc;
 
-class	invalidPortException: public std::exception
-{
-	const char	*what() const throw();
-};
+namespace errEx {
+	class	invalidPortException: public std::exception {
+		const char	*what() const throw();
+	};
+}

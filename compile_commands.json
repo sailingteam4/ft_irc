@@ -1,0 +1,104 @@
+[
+ {
+  "directory": "/nfs/homes/mbico/Desktop/ft_irc",
+  "arguments": [
+   "c++",
+   "-std=c++98",
+   "-Wall",
+   "-Werror",
+   "-Wextra",
+   "-c",
+   "srcs/parsing/parsing.cpp",
+   "-o",
+   "srcs/parsing/parsing.o",
+   "-I",
+   "./hdrs"
+  ],
+  "file": "srcs/parsing/parsing.cpp"
+ },
+ {
+  "directory": "/nfs/homes/mbico/Desktop/ft_irc",
+  "arguments": [
+   "c++",
+   "-std=c++98",
+   "-Wall",
+   "-Werror",
+   "-Wextra",
+   "-c",
+   "srcs/parsing.cpp",
+   "-o",
+   "srcs/parsing.o",
+   "-I",
+   "./hdrs"
+  ],
+  "file": "srcs/parsing.cpp"
+ },
+ {
+  "directory": "/nfs/homes/mbico/Desktop/ft_irc",
+  "arguments": [
+   "c++",
+   "-std=c++98",
+   "-Wall",
+   "-Werror",
+   "-Wextra",
+   "-c",
+   "srcs/Server.cpp",
+   "-o",
+   "srcs/Server.o",
+   "-I",
+   "./hdrs"
+  ],
+  "file": "srcs/Server.cpp"
+ },
+ {
+  "directory": "/nfs/homes/mbico/Desktop/ft_irc",
+  "arguments": [
+   "c++",
+   "-std=c++98",
+   "-Wall",
+   "-Werror",
+   "-Wextra",
+   "-c",
+   "srcs/main.cpp",
+   "-o",
+   "srcs/main.o",
+   "-I",
+   "./hdrs"
+  ],
+  "file": "srcs/main.cpp"
+ },
+ {
+  "directory": "/nfs/homes/mbico/Desktop/ft_irc",
+  "arguments": [
+   "c++",
+   "-std=c++98",
+   "-Wall",
+   "-Werror",
+   "-Wextra",
+   "-c",
+   "srcs/utils/converter.cpp",
+   "-o",
+   "srcs/utils/converter.o",
+   "-I",
+   "./hdrs"
+  ],
+  "file": "srcs/utils/converter.cpp"
+ },
+ {
+  "directory": "/nfs/homes/mbico/Desktop/ft_irc",
+  "arguments": [
+   "c++",
+   "-std=c++98",
+   "-Wall",
+   "-Werror",
+   "-Wextra",
+   "-c",
+   "srcs/utils/exception.cpp",
+   "-o",
+   "srcs/utils/exception.o",
+   "-I",
+   "./hdrs"
+  ],
+  "file": "srcs/utils/exception.cpp"
+ }
+]

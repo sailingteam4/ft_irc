@@ -1,4 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/15 20:43:18 by mbico             #+#    #+#             */
+/*   Updated: 2025/04/15 20:51:01 by mbico            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Server.hpp"
+#include "error.hpp"
+#include "ft_irc.hpp"
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -14,6 +28,8 @@
 #include <vector>
 #include <map>
 
+errno_irc_code errno_irc = NO_ERROR;
+
 long stoi(const char *s)
 {
     long i;
@@ -25,7 +41,6 @@ long stoi(const char *s)
     }
     return i;
 }
-
 int main(int argc, char *argv[])
 {
     if (argc != 3)
