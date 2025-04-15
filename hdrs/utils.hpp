@@ -1,18 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exception.cpp                                      :+:      :+:    :+:   */
+/*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
+/*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/28 15:38:51 by mbico             #+#    #+#             */
-/*   Updated: 2025/04/14 18:43:16 by mateo            ###   ########.fr       */
+/*   Created: 2025/04/14 18:55:26 by mateo             #+#    #+#             */
+/*   Updated: 2025/04/14 18:56:20 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "error.hpp"
+#pragma once
 
-const char	*invalidPortException::what() const throw()
-{
-	return("invalidPortException");	
-}
+#include <stdint.h>
+
+uint16_t	ft_atous(const char *str);

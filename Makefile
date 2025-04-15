@@ -6,7 +6,7 @@
 #    By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/14 23:42:46 by mbico             #+#    #+#              #
-#    Updated: 2025/03/28 13:55:46 by nrontey          ###   ########.fr        #
+#    Updated: 2025/04/14 19:12:56 by mateo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,8 @@ $(NAME): $(OBJS)
 clean:
 	@echo "$(RED)Removing object...$(NC)"
 	@rm srcs/*.o
+	@rm srcs/utils/*.o
+	@rm srcs/parsing/*.o
 
 fclean: clean
 	@echo "$(RED)Removing $(NAME)...$(NC)"
