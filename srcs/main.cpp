@@ -12,6 +12,7 @@
 #include <sys/select.h>
 #include <fcntl.h>
 #include <vector>
+#include <map>
 
 long stoi(const char *s)
 {
@@ -79,6 +80,7 @@ int main(int argc, char *argv[])
     }
 
     std::vector<int> client_sockets;
+	std::map<int, std::string> client_nicknames; 
     
     fd_set master;
     fd_set read_fds;
@@ -207,6 +209,49 @@ int main(int argc, char *argv[])
 								}
 							}
 							std::cout << "Client socket " << i << " disconnected" << std::endl;
+						}
+
+						else if (message.find("NICK") != std::string::npos)
+						{
+							std::string nickname = message.substr(5);
+							nickname.erase(nickname.find("\r")); // Supprimer les caractères de fin de ligne
+							client_nicknames[i] = nickname;
+
+							std::string response = "NICK command received. Your nickname is now " + nickname + "\n";
+							send(i, response.c_str(), response.size(), 0);
+
+							std::cout << "Client socket " << i << " set nickname to: " << nickname << std::endl;
+						}
+
+						// vas-y jvais essayer de faire croire au serveur qu'il y a un channel
+						// pour test genre simuler une reponse
+
+						else if (message.find("JOIN") != std::string::npos)
+						{
+							size_t pos = message.find("JOIN") + 5;
+							std::string channel = message.substr(pos);
+							channel.erase(channel.find("\r"));
+						
+							std::string nickname = client_nicknames[i];
+						
+							std::string joinMessage = ":" + nickname + "!user@localhost JOIN :" + channel + "\r\n";
+							send(i, joinMessage.c_str(), joinMessage.size(), 0);
+						
+							std::string response = ":" + std::string("irc.example.com") + " 331 " + nickname + " " + channel + " :No topic is set\r\n";
+							send(i, response.c_str(), response.size(), 0);
+						
+							response = ":" + std::string("irc.example.com") + " 353 " + nickname + " = " + channel + " :@" + nickname + "\r\n";
+							send(i, response.c_str(), response.size(), 0);
+						
+							response = ":" + std::string("irc.example.com") + " 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n";
+							send(i, response.c_str(), response.size(), 0);
+						
+							std::cout << "Client " << nickname << " joined channel: " << channel << std::endl;
+						}
+
+						else
+						{
+							// la faudra gerer c'est quand une commande n'est pas reconnue
 						}
 
                     }
