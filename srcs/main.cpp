@@ -148,6 +148,9 @@ int main(int argc, char *argv[])
                         
                         std::cout << "New connection: socket fd=" << newfd 
                                  << ", ip=" << host << std::endl;
+
+						std::string welcomeMessage = "SALUT GROS BG !\n";
+						send(newfd, welcomeMessage.c_str(), welcomeMessage.size(), 0);
                     }
                 }
 				// Client qui envoie des données
@@ -181,8 +184,31 @@ int main(int argc, char *argv[])
                         std::string message(buf, 0, bytesReceived);
                         std::cout << "Received from socket " << i << ": " << message << std::endl;
 
-						std::string response = "PONG :ping";
-						send(i, response.c_str(), response.size(), 0);
+						// BASIC handling of commands juste pour tester parce que flemme
+
+						if (message.find("PING") != std::string::npos)
+						{
+							std::string response = "PONG : " + message.substr(5);
+							send(i, response.c_str(), response.size(), 0);
+						}
+
+						else if (message.find("QUIT") != std::string::npos)
+						{
+							std::string response = "Bye bye !\n";
+							send(i, response.c_str(), response.size(), 0);
+							close(i);
+							FD_CLR(i, &master);
+							for (std::vector<int>::iterator it = client_sockets.begin(); it != client_sockets.end(); ++it)
+							{
+								if (*it == i)
+								{
+									client_sockets.erase(it);
+									break;
+								}
+							}
+							std::cout << "Client socket " << i << " disconnected" << std::endl;
+						}
+
                     }
                 }
             }
