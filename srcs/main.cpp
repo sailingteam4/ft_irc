@@ -3,30 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
+/*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 20:43:18 by mbico             #+#    #+#             */
-/*   Updated: 2025/04/15 20:51:01 by mbico            ###   ########.fr       */
+/*   Updated: 2025/04/16 23:54:12 by nrontey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "error.hpp"
 #include "ft_irc.hpp"
-
-#include <sys/types.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <string.h>
-#include <string>
-#include <iostream>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/select.h>
-#include <fcntl.h>
-#include <vector>
-#include <map>
 
 void handleClientMessage(int client_fd, const std::string& message, std::map<int, std::string>& client_nicknames, fd_set& master);
 

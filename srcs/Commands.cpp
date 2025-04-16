@@ -1,20 +1,5 @@
 #include "Server.hpp"
 
-#include <sys/types.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <string.h>
-#include <string>
-#include <iostream>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/select.h>
-#include <fcntl.h>
-#include <vector>
-#include <map>
-
-
 void handleClientMessage(int client_fd, const std::string& message, std::map<int, std::string>& client_nicknames, fd_set& master)
 {
     std::cout << "Received from socket " << client_fd << ": " << message << std::endl;
