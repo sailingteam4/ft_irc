@@ -19,8 +19,11 @@
 class Server
 {
     private:
+		// Basic args
         std::string port;
         std::string password;
+
+		// Socket and client management
         int listening_socket;
         std::vector<int> client_sockets;
         std::map<int, std::string> client_nicknames;
@@ -28,9 +31,11 @@ class Server
         int fdmax;
         
     public:
+		// Constructor and Destructor
         Server(std::string port, std::string password);
         ~Server();
-        
+
+		// Server methods
         bool initialize();
         void run();
         void handleNewConnection();
@@ -38,7 +43,7 @@ class Server
         void handleClientMessage(int client_fd, const std::string& message);
         void cleanupSocket(int socket_fd);
         
-        // Utility methods
+        // Utils
         long stoi(const char* s);
 };
 
