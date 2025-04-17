@@ -6,7 +6,7 @@
 /*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 20:43:18 by mbico             #+#    #+#             */
-/*   Updated: 2025/04/17 17:22:51 by mateo            ###   ########.fr       */
+/*   Updated: 2025/04/17 17:33:32 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ errno_irc_code errno_irc = NO_ERROR;
 
 int main(int argc, char *argv[])
 {
-    std::string port;
+    uint16_t	port;
 	std::string	password;
 
 	try {

@@ -21,7 +21,7 @@ class Server
 {
     private:
 		// Basic args
-        std::string port;
+        uint16_t	port;
         std::string password;
 
 		// Socket and client management
@@ -40,7 +40,7 @@ class Server
         
     public:
 		// Constructor and Destructor
-        Server(std::string port, std::string password);
+        Server(uint16_t port, std::string password);
         ~Server();
 
 		// Server methods

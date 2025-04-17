@@ -2,7 +2,7 @@
 #include "error.hpp"
 #include "ft_irc.hpp"
 
-Server::Server(std::string port, std::string password) : port(port), password(password), listening_socket(-1), fdmax(0)
+Server::Server(uint16_t port, std::string password) : port(port), password(password), listening_socket(-1), fdmax(0)
 {
     std::cout << "Server created on port: " << port << std::endl;
     FD_ZERO(&master_set);
@@ -21,18 +21,6 @@ Server::~Server()
     std::cout << "Server shutdown" << std::endl;
 }
 
-long Server::stoi(const char *s)
-{
-    long i;
-    i = 0;
-    while(*s >= '0' && *s <= '9')
-    {
-        i = i * 10 + (*s - '0');
-        s++;
-    }
-    return i;
-}
-
 bool Server::initialize()
 {
     listening_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -43,11 +31,9 @@ bool Server::initialize()
     if (setsockopt(listening_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1)
 		throw errStup::socketFailedToSet();
 
-    int nb_port = stoi(port.c_str());
-
     sockaddr_in hint;
     hint.sin_family = AF_INET;
-    hint.sin_port = htons(nb_port);
+    hint.sin_port = htons(port);
     inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
 
     if (bind(listening_socket, (sockaddr*)&hint, sizeof(hint)) == -1)
