@@ -70,7 +70,38 @@ void Server::handleClientData(int client_fd)
     else
     {
         std::string message(buf, 0, bytesReceived);
-        handleClientMessage(client_fd, message);
+        
+        size_t start = 0;
+        size_t end = message.find("\r\n");
+        
+        if (end == std::string::npos)
+            end = message.find("\n");
+            
+        while (end != std::string::npos)
+        {
+            std::string cmd = message.substr(start, end - start);
+            if (!cmd.empty())
+            {
+                handleClientMessage(client_fd, cmd);
+            }
+            
+            start = end + (message[end] == '\r' ? 2 : 1);
+            if (start >= message.size())
+                break;
+                
+            end = message.find("\r\n", start);
+            if (end == std::string::npos)
+                end = message.find("\n", start);
+        }
+        
+        if (start < message.size())
+        {
+            std::string cmd = message.substr(start);
+            if (!cmd.empty())
+            {
+                handleClientMessage(client_fd, cmd);
+            }
+        }
     }
 }
 
@@ -78,7 +109,7 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
 {
     std::cout << "Received from socket " << client_fd << ": " << message << std::endl;
 
-    if (message.find("PASS") != std::string::npos)
+    if (message.find("PASS ") == 0)
     {
         size_t pos = message.find("PASS") + 5;
         std::string pass = message.substr(pos);
@@ -107,30 +138,40 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
         return;
     }
 
-    if (message.find("PING") != std::string::npos)
-    {
-        std::string response = "PONG :" + message.substr(5);
-        send(client_fd, response.c_str(), response.size(), 0);
-    }
-    else if (message.find("QUIT") != std::string::npos)
-    {
-        std::string response = "Bye bye !\n";
-        send(client_fd, response.c_str(), response.size(), 0);
-        cleanupSocket(client_fd);
-    }
-    else if (message.find("NICK") != std::string::npos)
+    if (message.find("NICK ") == 0)
     {
         std::string nickname = message.substr(5);
         if (nickname.find("\r") != std::string::npos)
             nickname.erase(nickname.find("\r"));
+        else if (nickname.find("\n") != std::string::npos)
+            nickname.erase(nickname.find("\n"));
+        
         client_nicknames[client_fd] = nickname;
 
-        std::string response = "NICK command received. Your nickname is now " + nickname + "\n";
+        std::string response = "NICK command received. Your nickname is now " + nickname + "\r\n";
         send(client_fd, response.c_str(), response.size(), 0);
 
         std::cout << "Client socket " << client_fd << " set nickname to: " << nickname << std::endl;
+        return;
     }
-    else if (message.find("JOIN") != std::string::npos)
+
+    if (message.find("PING") == 0)
+    {
+        std::string pingParam = message.substr(5);
+        std::string response = "PONG :" + pingParam + "\r\n";
+        send(client_fd, response.c_str(), response.size(), 0);
+        return;
+    }
+    
+    else if (message.find("QUIT") == 0)
+    {
+        std::string response = "Bye bye !\r\n";
+        send(client_fd, response.c_str(), response.size(), 0);
+        cleanupSocket(client_fd);
+        return;
+    }
+    
+    else if (message.find("JOIN ") == 0)
     {
         size_t pos = message.find("JOIN") + 5;
         std::string channel = message.substr(pos);
@@ -150,7 +191,7 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
         if (channel[0] != '#')
             channel = "#" + channel;
 
-        std::string joinMessage = ":" + nickname + "!user@localhost JOIN :" + channel + "\r\n";
+        std::string joinMessage = ":" + nickname + "!irc.example.com JOIN :" + channel + "\r\n";
         send(client_fd, joinMessage.c_str(), joinMessage.size(), 0);
 
         std::string response = ":irc.example.com 331 " + nickname + " " + channel + " :No topic is set\r\n";
@@ -163,8 +204,10 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
         send(client_fd, response.c_str(), response.size(), 0);
 
         std::cout << "Client " << nickname << " joined channel: " << channel << std::endl;
+        return;
     }
-    else if (message.find("TOPIC") != std::string::npos)
+    
+    else if (message.find("TOPIC ") == 0)
     {
         size_t pos = message.find("TOPIC") + 6;
         std::string channel = message.substr(pos);
@@ -176,10 +219,11 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
         send(client_fd, topicMessage.c_str(), topicMessage.size(), 0);
 
         std::cout << "Client " << nickname << " set topic for channel: " << channel << std::endl;
+        return;
     }
     else
     {
-       // handle uknown commands here
+        std::cout << "Unknown command received from client " << client_fd << ": " << message << std::endl;
     }
 }
 
