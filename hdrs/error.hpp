@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 15:38:51 by mbico             #+#    #+#             */
-/*   Updated: 2025/04/17 16:08:57 by mateo            ###   ########.fr       */
+/*   Updated: 2025/04/17 17:19:12 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,14 @@ extern	errno_irc_code	errno_irc;
 
 namespace errPsg {
 	class	invalidPortException: public std::exception
+	{
+		const char	*what() const throw();
+	};
+	class	invalidPasswordException: public std::exception
+	{
+		const char	*what() const throw();
+	};
+	class	invalidArgException: public std::exception
 	{
 		const char	*what() const throw();
 	};

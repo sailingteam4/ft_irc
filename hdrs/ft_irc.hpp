@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:57:01 by mbico             #+#    #+#             */
-/*   Updated: 2025/04/14 19:06:05 by mateo            ###   ########.fr       */
+/*   Updated: 2025/04/17 17:22:35 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,6 @@
 #define WHITE   "\033[37m"      /* White */
 #define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
 
+void		argValid(int argc);
 uint16_t	portValid(const char *strPort);
+std::string	passwordValid(const char *password);
