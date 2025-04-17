@@ -28,6 +28,7 @@ class Server
         int listening_socket;
         std::vector<int> client_sockets;
         std::map<int, std::string> client_nicknames;
+        std::map<int, bool> client_authenticated;
         fd_set master_set;
         int fdmax;
 
@@ -35,6 +36,7 @@ class Server
         void handleNewConnection();
         void handleClientData(int client_fd);
         void handleClientMessage(int client_fd, const std::string& message);
+        bool authenticateClient(int client_fd, const std::string& pass);
         
     public:
 		// Constructor and Destructor

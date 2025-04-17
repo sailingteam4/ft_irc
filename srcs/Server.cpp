@@ -107,4 +107,5 @@ void Server::cleanupSocket(int socket_fd)
     }
     
     client_nicknames.erase(socket_fd);
+    client_authenticated.erase(socket_fd);
 }

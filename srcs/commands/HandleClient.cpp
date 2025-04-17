@@ -21,6 +21,7 @@ void Server::handleNewConnection()
     }
     
     client_sockets.push_back(newfd);
+    client_authenticated[newfd] = false;
     
     char host[NI_MAXHOST];
     char service[NI_MAXSERV];
@@ -43,7 +44,7 @@ void Server::handleNewConnection()
     std::cout << "New connection: socket fd=" << newfd 
              << ", ip=" << host << std::endl;
 
-    std::string welcomeMessage = "SALUT GROS BG !\n";
+    std::string welcomeMessage = "Welcome to the IRC server! Please authenticate using PASS <password>\r\n";
     send(newfd, welcomeMessage.c_str(), welcomeMessage.size(), 0);
 }
 
@@ -76,6 +77,35 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
 {
     std::cout << "Received from socket " << client_fd << ": " << message << std::endl;
 
+    if (message.find("PASS") != std::string::npos)
+    {
+        size_t pos = message.find("PASS") + 5;
+        std::string pass = message.substr(pos);
+        if (pass.find("\r") != std::string::npos)
+            pass.erase(pass.find("\r"));
+        else if (pass.find("\n") != std::string::npos)
+            pass.erase(pass.find("\n"));
+        
+        if (authenticateClient(client_fd, pass))
+        {
+            std::string response = "Authentication successful\r\n";
+            send(client_fd, response.c_str(), response.size(), 0);
+        }
+        else
+        {
+            std::string response = "Authentication failed: invalid password\r\n";
+            send(client_fd, response.c_str(), response.size(), 0);
+        }
+        return;
+    }
+
+    if (!client_authenticated[client_fd] && message.find("PASS") == std::string::npos)
+    {
+        std::string response = "Error: You must authenticate using PASS <password> first\r\n";
+        send(client_fd, response.c_str(), response.size(), 0);
+        return;
+    }
+
     if (message.find("PING") != std::string::npos)
     {
         std::string response = "PONG :" + message.substr(5);
@@ -90,7 +120,8 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
     else if (message.find("NICK") != std::string::npos)
     {
         std::string nickname = message.substr(5);
-        nickname.erase(nickname.find("\r"));
+        if (nickname.find("\r") != std::string::npos)
+            nickname.erase(nickname.find("\r"));
         client_nicknames[client_fd] = nickname;
 
         std::string response = "NICK command received. Your nickname is now " + nickname + "\n";
@@ -102,7 +133,8 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
     {
         size_t pos = message.find("JOIN") + 5;
         std::string channel = message.substr(pos);
-        channel.erase(channel.find("\r"));
+        if (channel.find("\r") != std::string::npos)
+            channel.erase(channel.find("\r"));
 
         std::string nickname = client_nicknames[client_fd];
 
@@ -124,7 +156,8 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
     {
         size_t pos = message.find("TOPIC") + 6;
         std::string channel = message.substr(pos);
-        channel.erase(channel.find("\r"));
+        if (channel.find("\r") != std::string::npos)
+            channel.erase(channel.find("\r"));
         std::string nickname = client_nicknames[client_fd];
 
         std::string topicMessage = ":" + nickname + "!user@localhost TOPIC " + channel + " :New topic set\r\n";
@@ -134,7 +167,18 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
     }
     else
     {
-        std::string response = "421 Unknown command\r\n";
-        send(client_fd, response.c_str(), response.size(), 0);
+       // handle uknown commands here
     }
+}
+
+bool Server::authenticateClient(int client_fd, const std::string& pass)
+{
+    if (pass == password)
+    {
+        client_authenticated[client_fd] = true;
+        std::cout << "Client socket " << client_fd << " authenticated successfully" << std::endl;
+        return true;
+    }
+    std::cout << "Client socket " << client_fd << " failed authentication" << std::endl;
+    return false;
 }
