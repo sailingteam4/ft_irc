@@ -16,6 +16,7 @@
 #include <vector>
 #include <map>
 
+
 class Server
 {
     private:
@@ -29,6 +30,11 @@ class Server
         std::map<int, std::string> client_nicknames;
         fd_set master_set;
         int fdmax;
+
+        // HandleClient.cpp
+        void handleNewConnection();
+        void handleClientData(int client_fd);
+        void handleClientMessage(int client_fd, const std::string& message);
         
     public:
 		// Constructor and Destructor
@@ -38,10 +44,10 @@ class Server
 		// Server methods
         bool initialize();
         void run();
-        void handleNewConnection();
-        void handleClientData(int client_fd);
-        void handleClientMessage(int client_fd, const std::string& message);
         void cleanupSocket(int socket_fd);
+
+
+
         
         // Utils
         long stoi(const char* s);
