@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
+/*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:57:01 by mbico             #+#    #+#             */
-/*   Updated: 2025/04/17 17:22:35 by mateo            ###   ########.fr       */
+/*   Updated: 2025/04/18 01:00:41 by nrontey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 #include <stdint.h>
 #include <iostream>
 
-#define RED     "\033[31m"      /* Red */
-#define YELLOW  "\033[33m"      /* Yellow */
-#define WHITE   "\033[37m"      /* White */
-#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
+#define RED     "\033[31m"
+#define YELLOW  "\033[33m"
+#define WHITE   "\033[37m"
+#define BOLDMAGENTA "\033[1m\033[35m"
+
+#define SERVER_NAME "feur.apagnan.bebou"
 
 void		argValid(int argc);
 uint16_t	portValid(const char *strPort);

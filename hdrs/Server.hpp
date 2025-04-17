@@ -15,6 +15,7 @@
 #include <fcntl.h>
 #include <vector>
 #include <map>
+#include "Channel.hpp"
 
 
 class Server
@@ -31,6 +32,9 @@ class Server
         std::map<int, bool> client_authenticated;
         fd_set master_set;
         int fdmax;
+        
+        // Channel management
+        std::vector<Channel> channels;
 
         // HandleClient.cpp
         void handleNewConnection();
@@ -45,6 +49,12 @@ class Server
         void handleQuit(int client_fd, const std::string& message);
         void handleJoin(int client_fd, const std::string& message);
         void handleTopic(int client_fd, const std::string& message);
+        void handlePrivmsg(int client_fd, const std::string& message);
+        
+        // Channel methods
+        Channel* findChannel(const std::string& channel_name);
+        void createChannel(const std::string& channel_name);
+        void broadcastToChannel(const std::string& message, const std::string& channel_name, int exclude_fd = -1);
         
     public:
 		// Constructor and Destructor

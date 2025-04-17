@@ -82,12 +82,24 @@ void Server::cleanupSocket(int socket_fd)
 {
     close(socket_fd);
     FD_CLR(socket_fd, &master_set);
-    
-    for (std::vector<int>::iterator it = client_sockets.begin(); it != client_sockets.end(); ++it)
+
+	for (std::vector<int>::iterator it = client_sockets.begin(); it != client_sockets.end(); ++it)
     {
         if (*it == socket_fd)
         {
             client_sockets.erase(it);
+            break;
+        }
+    }
+    
+    for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+    {
+        it->removeUser(socket_fd);
+        
+        if (it->getUsers().empty())
+        {
+            std::cout << "Removing empty channel: " << it->getName() << std::endl;
+            channels.erase(it);
             break;
         }
     }
