@@ -150,7 +150,7 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
         if (channel[0] != '#')
             channel = "#" + channel;
 
-        std::string joinMessage = ":" + nickname + "!user@localhost JOIN " + channel + "\r\n";
+        std::string joinMessage = ":" + nickname + "!user@localhost JOIN :" + channel + "\r\n";
         send(client_fd, joinMessage.c_str(), joinMessage.size(), 0);
 
         std::string response = ":irc.example.com 331 " + nickname + " " + channel + " :No topic is set\r\n";
