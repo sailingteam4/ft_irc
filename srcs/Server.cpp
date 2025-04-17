@@ -37,17 +37,11 @@ bool Server::initialize()
 {
     listening_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (listening_socket == -1)
-    {
-        std::cerr << "Error: Could not create socket" << std::endl;
-        return false;
-    }
+		throw errStup::socketCouldNotCreate(); 
 
     int yes = 1;
     if (setsockopt(listening_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1)
-    {
-        std::cerr << "Error: Failed to set socket options" << std::endl;
-        return false;
-    }
+		throw errStup::socketFailedToSet();
 
     int nb_port = stoi(port.c_str());
 
@@ -57,16 +51,10 @@ bool Server::initialize()
     inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
 
     if (bind(listening_socket, (sockaddr*)&hint, sizeof(hint)) == -1)
-    {
-        std::cerr << "Error: Could not bind socket" << std::endl;
-        return false;
-    }
+		throw errStup::socketCouldNotBind();
 
     if (listen(listening_socket, SOMAXCONN) == -1)
-    {
-        std::cerr << "Error: Could not listen on socket" << std::endl;
-        return false;
-    }
+		throw errStup::socketCouldNotListen();
 
     FD_SET(listening_socket, &master_set);
     fdmax = listening_socket;
@@ -86,11 +74,7 @@ void Server::run()
         read_fds = master_set;
         
         if (select(fdmax + 1, &read_fds, NULL, NULL, NULL) == -1)
-        {
-            std::cerr << "Error: select() failed" << std::endl;
-            break;
-        }
-        
+			throw errEx::selectFailed();
         for (int i = 0; i <= fdmax; i++)
         {
             if (FD_ISSET(i, &read_fds))

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   psg_args.cpp                                       :+:      :+:    :+:   */
+/*   psgArgs.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:52:48 by mateo             #+#    #+#             */
-/*   Updated: 2025/04/15 21:04:24 by mbico            ###   ########.fr       */
+/*   Updated: 2025/04/17 16:32:20 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ uint16_t	portValid(const char *strPort)
 
 	port = ft_atous(strPort);
 	if (errno_irc || port <= 1024)
-		throw errEx::invalidPortException();
+		throw errPsg::invalidPortException();
 	return (port);
 }
+
+

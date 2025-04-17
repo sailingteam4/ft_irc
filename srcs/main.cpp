@@ -6,7 +6,7 @@
 /*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 20:43:18 by mbico             #+#    #+#             */
-/*   Updated: 2025/04/17 10:53:13 by mateo            ###   ########.fr       */
+/*   Updated: 2025/04/17 16:35:08 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,16 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    Server server(port, password);
-    
-    if (!server.initialize())
-    {
-        return 1;
-    }
-    
-    server.run();
+	try {
+		Server server(port, password);
+		if (!server.initialize())
+			return 1;
 
+		server.run();
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << RED << e.what() << WHITE << std::endl;
+	}
     return 0;
 }
