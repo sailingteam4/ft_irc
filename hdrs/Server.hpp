@@ -46,9 +46,6 @@ class Server
         void run();
         void cleanupSocket(int socket_fd);
 
-
-
-        
         // Utils
         long stoi(const char* s);
 };
