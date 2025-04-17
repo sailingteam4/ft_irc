@@ -38,6 +38,14 @@ class Server
         void handleClientMessage(int client_fd, const std::string& message);
         bool authenticateClient(int client_fd, const std::string& pass);
         
+        // IRC command handlers
+        void handlePass(int client_fd, const std::string& message);
+        void handleNick(int client_fd, const std::string& message);
+        void handlePing(int client_fd, const std::string& message);
+        void handleQuit(int client_fd, const std::string& message);
+        void handleJoin(int client_fd, const std::string& message);
+        void handleTopic(int client_fd, const std::string& message);
+        
     public:
 		// Constructor and Destructor
         Server(uint16_t port, std::string password);
