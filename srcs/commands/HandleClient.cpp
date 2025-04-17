@@ -1,6 +1,7 @@
 #include "Server.hpp"
 #include "error.hpp"
 #include "ft_irc.hpp"
+#include <sstream>
 
 void Server::handleNewConnection()
 {
@@ -135,10 +136,21 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
         std::string channel = message.substr(pos);
         if (channel.find("\r") != std::string::npos)
             channel.erase(channel.find("\r"));
+        else if (channel.find("\n") != std::string::npos)
+            channel.erase(channel.find("\n"));
 
         std::string nickname = client_nicknames[client_fd];
+        if (nickname.empty())
+        {
+            std::stringstream ss;
+            ss << "user" << client_fd;
+            nickname = ss.str();
+        }
 
-        std::string joinMessage = ":" + nickname + "!user@localhost JOIN :" + channel + "\r\n";
+        if (channel[0] != '#')
+            channel = "#" + channel;
+
+        std::string joinMessage = ":" + nickname + "!user@localhost JOIN " + channel + "\r\n";
         send(client_fd, joinMessage.c_str(), joinMessage.size(), 0);
 
         std::string response = ":irc.example.com 331 " + nickname + " " + channel + " :No topic is set\r\n";
