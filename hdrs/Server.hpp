@@ -50,6 +50,7 @@ class Server
         void handleJoin(int client_fd, const std::string& message);
         void handleTopic(int client_fd, const std::string& message);
         void handlePrivmsg(int client_fd, const std::string& message);
+        void handleMode(int client_fd, const std::string& message);
         
         // Channel methods
         Channel* findChannel(const std::string& channel_name);

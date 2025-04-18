@@ -151,12 +151,19 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
         handleTopic(client_fd, message);
         return;
     }
-    
+
     else if (message.find("PRIVMSG ") == 0)
     {
         handlePrivmsg(client_fd, message);
         return;
     }
+
+    else if (message.find("MODE ") == 0)
+    {
+        handleMode(client_fd, message);
+        return;
+    }
+
     else
     {
         std::cout << "Unknown command received from client " << client_fd << ": " << message << std::endl;
