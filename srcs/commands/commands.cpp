@@ -58,11 +58,11 @@ void Server::handleQuit(int client_fd, const std::string& message)
 void Server::handleJoin(int client_fd, const std::string& message)
 {
     size_t pos = message.find("JOIN") + 5;
-    std::string channel_name = message.substr(pos);
-    if (channel_name.find("\r") != std::string::npos)
-        channel_name.erase(channel_name.find("\r"));
-    else if (channel_name.find("\n") != std::string::npos)
-        channel_name.erase(channel_name.find("\n"));
+    std::string channels_str = message.substr(pos);
+    if (channels_str.find("\r") != std::string::npos)
+        channels_str.erase(channels_str.find("\r"));
+    else if (channels_str.find("\n") != std::string::npos)
+        channels_str.erase(channels_str.find("\n"));
 
     std::string nickname = client_nicknames[client_fd];
     if (nickname.empty())
@@ -72,39 +72,56 @@ void Server::handleJoin(int client_fd, const std::string& message)
         nickname = ss.str();
     }
 
-    if (!channel_name.empty() && channel_name[0] != '#')
-        channel_name = "#" + channel_name;
-
-    Channel* channel = findChannel(channel_name);
-    if (channel == NULL)
+    std::vector<std::string> channel_names;
+    std::istringstream iss(channels_str);
+    std::string single_channel;
+    
+    while (std::getline(iss, single_channel, ','))
     {
-        createChannel(channel_name);
-        channel = findChannel(channel_name);
+        if (single_channel.empty())
+            continue;
+            
+        if (single_channel[0] != '#')
+            single_channel = "#" + single_channel;
+            
+        channel_names.push_back(single_channel);
     }
 
-    channel->addUser(client_fd);
-    
-    std::string joinMessage = ":" + nickname + "!" SERVER_NAME " JOIN :" + channel_name + "\r\n";
-    send(client_fd, joinMessage.c_str(), joinMessage.size(), 0);
+    for (size_t i = 0; i < channel_names.size(); i++)
+    {
+        std::string channel_name = channel_names[i];
+        
+        Channel* channel = findChannel(channel_name);
+        if (channel == NULL)
+        {
+            createChannel(channel_name);
+            channel = findChannel(channel_name);
+        }
 
-    std::string broadcastMsg = ":" + nickname + "!" SERVER_NAME " JOIN :" + channel_name + "\r\n";
-    broadcastToChannel(broadcastMsg, channel_name, client_fd);
+        channel->addUser(client_fd);
+        
+        std::string joinMessage = ":" + nickname + "!" SERVER_NAME " JOIN :" + channel_name + "\r\n";
+        send(client_fd, joinMessage.c_str(), joinMessage.size(), 0);
 
-    std::string topic = channel->getTopic();
-    std::string response;
-    if (topic.empty())
-        response = ":" SERVER_NAME " 331 " + nickname + " " + channel_name + " :No topic is set\r\n";
-    else
-        response = ":" SERVER_NAME " 332 " + nickname + " " + channel_name + " :" + topic + "\r\n";
-    send(client_fd, response.c_str(), response.size(), 0);
+        std::string broadcastMsg = ":" + nickname + "!" SERVER_NAME " JOIN :" + channel_name + "\r\n";
+        broadcastToChannel(broadcastMsg, channel_name, client_fd);
 
-    response = ":" SERVER_NAME " 353 " + nickname + " = " + channel_name + " :" + channel->getUserList(client_nicknames) + "\r\n";
-    send(client_fd, response.c_str(), response.size(), 0);
-    
-    response = ":" SERVER_NAME " 366 " + nickname + " " + channel_name + " :End of /NAMES list.\r\n";
-    send(client_fd, response.c_str(), response.size(), 0);
+        std::string topic = channel->getTopic();
+        std::string response;
+        if (topic.empty())
+            response = ":" SERVER_NAME " 331 " + nickname + " " + channel_name + " :No topic is set\r\n";
+        else
+            response = ":" SERVER_NAME " 332 " + nickname + " " + channel_name + " :" + topic + "\r\n";
+        send(client_fd, response.c_str(), response.size(), 0);
 
-    std::cout << "Client " << nickname << " joined channel: " << channel_name << std::endl;
+        response = ":" SERVER_NAME " 353 " + nickname + " = " + channel_name + " :" + channel->getUserList(client_nicknames) + "\r\n";
+        send(client_fd, response.c_str(), response.size(), 0);
+        
+        response = ":" SERVER_NAME " 366 " + nickname + " " + channel_name + " :End of /NAMES list.\r\n";
+        send(client_fd, response.c_str(), response.size(), 0);
+
+        std::cout << "Client " << nickname << " joined channel: " << channel_name << std::endl;
+    }
 }
 
 void Server::handleTopic(int client_fd, const std::string& message)
