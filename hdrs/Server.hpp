@@ -15,6 +15,7 @@
 #include <fcntl.h>
 #include <vector>
 #include <map>
+#include <sstream>
 #include "Channel.hpp"
 
 
@@ -51,6 +52,7 @@ class Server
         void handleTopic(int client_fd, const std::string& message);
         void handlePrivmsg(int client_fd, const std::string& message);
         void handleMode(int client_fd, const std::string& message);
+        std::vector<std::pair<char, char> > handleWhatMode(int client_fd, const std::string& mode);
         
         // Channel methods
         Channel* findChannel(const std::string& channel_name);
