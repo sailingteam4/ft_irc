@@ -85,9 +85,6 @@ void Server::handleMode(int client_fd, const std::string& message) {
 		target = "";
 	}
 
-
-	(void)client_fd; // pas used mais pour parsing apres utils
-
 	std::vector<std::pair<char, char> > mode_map = handleWhatMode(client_fd, mode);
 	std::vector<std::pair<char, std::string> > target_mode_map;
 	if (mode_map.empty())
@@ -110,7 +107,7 @@ void Server::handleMode(int client_fd, const std::string& message) {
 			}
 			else
 			{
-				value = "(null)";
+				value = "";
 			}
 		
 			target_mode_map.push_back(std::make_pair(modeLetter, value));
@@ -184,7 +181,6 @@ static int parsmode(const std::string& mode)
 
 		if (c == '+' || c == '-')
 			continue;
-
 		++pars_map[c];
 
 		if ((pars_map[c] > 1 && (c == 'i' || c == 't' || c == 'k' || c == 'o' || c == 'l')) || (c != 'i' && c != 't' && c != 'k' && c != 'o' && c != 'l'))
