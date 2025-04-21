@@ -32,6 +32,16 @@ void Server::handleNick(int client_fd, const std::string& message)
     else if (nickname.find("\n") != std::string::npos)
         nickname.erase(nickname.find("\n"));
     
+    for (std::map<int, std::string>::const_iterator it = client_nicknames.begin(); it != client_nicknames.end(); ++it)
+    {
+        if (it->first != client_fd && it->second == nickname)
+        {
+            std::string errorMsg = ":" SERVER_NAME " 433 * " + nickname + " :Nickname is already in use\r\n";
+            send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+            return;
+        }
+    }
+    
     client_nicknames[client_fd] = nickname;
     
     if (client_info.find(client_fd) == client_info.end())
