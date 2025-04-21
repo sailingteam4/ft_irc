@@ -49,8 +49,8 @@ bool Channel::addUser(int user_fd)
     if (hasUser(user_fd))
         return false;
 
-	if (hasUserLimit() && users.size() >= user_limit)
-		return false;
+    if (hasUserLimit() && users.size() >= static_cast<size_t>(user_limit))
+        return false;
         
     users.push_back(user_fd);
 
