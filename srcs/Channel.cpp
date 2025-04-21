@@ -2,8 +2,16 @@
 #include <algorithm>
 #include <sstream>
 
-Channel::Channel(const std::string& channelName) : name(channelName), topic("")
+Channel::Channel(const std::string& channelName) : name(channelName), topic("") 
 {
+	invite_only = false;
+	topic_protection = false;
+	key = "";
+	user_limit = 0;
+
+	if (name.empty())
+		name = "#default_channel";
+	
     if (name[0] != '#')
         name = "#" + name;
 }
@@ -40,6 +48,9 @@ bool Channel::addUser(int user_fd)
 {
     if (hasUser(user_fd))
         return false;
+
+	if (hasUserLimit() && users.size() >= user_limit)
+		return false;
         
     users.push_back(user_fd);
 
@@ -97,4 +108,44 @@ std::string Channel::getUserList(const std::map<int, std::string>& nicknames) co
     }
     
     return userList;
+}
+
+bool Channel::isInviteOnly() const
+{
+	return invite_only;
+}
+
+bool Channel::isTopicProtected() const
+{
+	return topic_protection;
+}
+
+bool Channel::hasKey() const
+{
+	return !key.empty();
+}
+
+bool Channel::hasUserLimit() const
+{
+	return user_limit > 0;
+}
+
+void Channel::setInviteOnly(bool status)
+{
+	invite_only = status;
+}
+
+void Channel::setTopicProtected(bool status)
+{
+	topic_protection = status;
+}
+
+void Channel::setKey(const std::string& newKey)
+{
+	key = newKey;
+}
+
+void Channel::setUserLimit(int limit)
+{
+	user_limit = limit;
 }

@@ -14,8 +14,10 @@ class Channel
 		std::map<int, bool> operators;
 
 		// Channel modes
-		bool _invite_exeption_channel_mode;					// -i
-		bool _moderated_channel_mode;						// -t
+		bool invite_only;
+		bool topic_protection;
+		std::string key;
+		int user_limit;
 		
 		public:
 		// Constructor and Destructor
@@ -34,12 +36,19 @@ class Channel
 		// Channel management
 		bool addUser(int user_fd);
 		bool removeUser(int user_fd);
-		
-		void setOperator(int user_fd, bool op_status);		// -o
-		void setKeyChannelMode(const std::string& key);		// -k
-		void client_limit_channel_mode(int limit_user);		// -l
-
+		void setOperator(int user_fd, bool op_status);
 		bool hasUser(int user_fd) const;
+
+		// Channel modes
+		bool isInviteOnly() const;
+		bool isTopicProtected() const;
+		bool hasKey() const;
+		bool hasUserLimit() const;
+
+		void setInviteOnly(bool status);
+		void setTopicProtected(bool status);
+		void setKey(const std::string& newKey);
+		void setUserLimit(int limit);
 		
 		// User list as a formatted string for IRC responses
 		std::string getUserList(const std::map<int, std::string>& nicknames) const;
