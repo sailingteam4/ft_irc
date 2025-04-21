@@ -128,6 +128,12 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
         return;
     }
 
+    if (message.find("USER ") == 0)
+    {
+        handleUser(client_fd, message);
+        return;
+    }
+
     if (message.find("PING") == 0)
     {
         handlePing(client_fd, message);

@@ -18,6 +18,16 @@
 #include <sstream>
 #include "Channel.hpp"
 
+struct UserInfo {
+    std::string username;
+    std::string hostname;
+    std::string servername;
+    std::string realname;
+    bool hasNick;
+    bool hasUser;
+    
+    UserInfo() : hasNick(false), hasUser(false) {}
+};
 
 class Server
 {
@@ -31,6 +41,7 @@ class Server
         std::vector<int> client_sockets;
         std::map<int, std::string> client_nicknames;
         std::map<int, bool> client_authenticated;
+        std::map<int, UserInfo> client_info;
         fd_set master_set;
         int fdmax;
         
@@ -46,6 +57,7 @@ class Server
         // IRC command handlers
         void handlePass(int client_fd, const std::string& message);
         void handleNick(int client_fd, const std::string& message);
+        void handleUser(int client_fd, const std::string& message);
         void handlePing(int client_fd, const std::string& message);
         void handleQuit(int client_fd, const std::string& message);
         void handleJoin(int client_fd, const std::string& message);
@@ -53,6 +65,9 @@ class Server
         void handlePrivmsg(int client_fd, const std::string& message);
         void handleMode(int client_fd, const std::string& message);
         std::vector<std::pair<char, char> > handleWhatMode(int client_fd, const std::string& mode);
+        
+        // Registration
+        void checkRegistrationStatus(int client_fd);
         
         // Channel methods
         Channel* findChannel(const std::string& channel_name);

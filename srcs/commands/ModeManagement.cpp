@@ -19,6 +19,15 @@ l | Limit users | Définit une limite | Supprime la limite | ✅ Ajout: oui❌ S
 
 void Server::handleMode(int client_fd, const std::string& message) {
 	
+	// J'ai rajouté un check pour savoir si le client est bien authentifié avant de faire quoi que ce soit
+    if (client_info.find(client_fd) == client_info.end() || 
+        !client_info[client_fd].hasNick || !client_info[client_fd].hasUser)
+    {
+        std::string errorMsg = ":" SERVER_NAME " 451 :You have not registered\r\n";
+        send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+        return;
+    }
+    
 	// Exemple de message : "/MODE #Channel +o operator"
 	// le code va tout decomposer le message pour en extraire les informations
 
