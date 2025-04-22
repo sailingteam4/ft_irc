@@ -68,6 +68,7 @@ class Server
         void handleTopic(int client_fd, const std::string& message);
         void handlePrivmsg(int client_fd, const std::string& message);
         void handleMode(int client_fd, const std::string& message);
+		void handleKick(int client_fd, const std::string& message);
         std::vector<std::pair<char, char> > handleWhatMode(int client_fd, const std::string& mode);
         
         // Registration

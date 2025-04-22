@@ -170,6 +170,12 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
         return;
     }
 
+	else if (message.find("KICK ") == 0)
+	{
+		handleKick(client_fd, message);
+		return;
+	}
+
     else
     {
         std::cout << "Unknown command received from client " << client_fd << ": " << message << std::endl;
