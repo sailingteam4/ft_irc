@@ -86,7 +86,7 @@ void Server::handleMode(int client_fd, const std::string& message) {
 	}
 
 	std::vector<std::pair<char, char> > mode_map = handleWhatMode(client_fd, mode);
-	std::vector<std::pair<char, std::string> > target_mode_map;
+	std::vector<std::pair<char, std::pair<char, std::string> > > target_mode_map; // Changed to store mode letter, sign, and target
 	if (mode_map.empty())
 	{
 		//en gros quand parsmode ressors l'erreur sans code derreur elle arrive ici, (s'active aussi quand on /join car join appel mode ????)
@@ -110,36 +110,40 @@ void Server::handleMode(int client_fd, const std::string& message) {
 				value = "";
 			}
 		
-			target_mode_map.push_back(std::make_pair(modeLetter, value));
+			target_mode_map.push_back(std::make_pair(modeLetter, std::make_pair(sign, value)));
 		}
 		if (!target_mode_map.empty())
 		{
-			for (std::vector<std::pair<char, std::string> >::iterator it = target_mode_map.begin(); it != target_mode_map.end(); ++it)
+			for (std::vector<std::pair<char, std::pair<char, std::string> > >::iterator it = target_mode_map.begin(); it != target_mode_map.end(); ++it)
 			{
 				char modeLetter = it->first;
-				std::string target = it->second;
+				char sign = it->second.first;
+				std::string target_value = it->second.second;
 
 				//fonction qui gere i
 				if (modeLetter == 'i')
-					// std::cout << "appel de 1" << modeLetter << std::endl;
+					// std::cout << "appel de 1" << modeLetter << " sign:" << sign << " mot: " <<target_value << std::endl;
 
 				//fonction qui gere t
 				if (modeLetter == 't')
-					// std::cout << "appel de 2" << modeLetter << std::endl;
+					// std::cout << "appel de 2" << modeLetter << " sign:" << sign << " mot: " <<target_value << std::endl;
 
 				//fonction qui gere k
 				if (modeLetter == 'k')
-					// std::cout << "appel de 3" << modeLetter << std::endl;
+					// std::cout << "appel de 3" << modeLetter << " sign:" << sign << " mot: " <<target_value << std::endl;
 
 				//fonction qui gere o
 				if (modeLetter == 'o')
-					// std::cout << "appel de 4" << modeLetter << std::endl;
+				{
+					// std::cout << "appel de 4" << modeLetter << " sign:" << sign << " mot: " <<target_value << std::endl;
+					ModeOperator(modeLetter, sign, target_value, channelName, client_fd);
+				}
 
 				//fonction qui gere l
 				if (modeLetter == 'l')
-					// std::cout << "appel de 5" << modeLetter << std::endl;
+					// std::cout << "appel de 5" << modeLetter << " sign:" << sign << " mot: " <<target_value << std::endl;
 				
-				(void) target;
+				(void) target_value;
 			}
 		}
 	}

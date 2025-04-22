@@ -53,6 +53,9 @@ class Server
         void handleClientData(int client_fd);
         void handleClientMessage(int client_fd, const std::string& message);
         bool authenticateClient(int client_fd, const std::string& pass);
+
+        // ModeLetter.cpp
+		void ModeOperator(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd);
         
         // IRC command handlers
         void handlePass(int client_fd, const std::string& message);
