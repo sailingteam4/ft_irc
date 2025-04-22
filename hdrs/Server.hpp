@@ -86,6 +86,8 @@ class Server
 
         // Utils
         long stoi(const char* s);
+		int getClientSocket(std::string& nickname);
+		std::string getClientNickname(int client_fd);
 };
 
 #endif

@@ -47,3 +47,23 @@ void Server::broadcastToChannel(const std::string& message, const std::string& c
         }
     }
 }
+
+int Server::getClientSocket(std::string& nickname)
+{
+	std::map<int, std::string>::iterator it = client_nicknames.begin();
+	while (it != client_nicknames.end())
+	{
+		if (it->second == nickname)
+			return it->first;
+		it++;
+	}
+	return -1;
+}
+
+std::string Server::getClientNickname(int client_fd)
+{
+	std::map<int, std::string>::iterator it = client_nicknames.find(client_fd);
+	if (it != client_nicknames.end())
+		return it->second;
+	return "";
+}
