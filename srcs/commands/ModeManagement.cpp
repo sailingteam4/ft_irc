@@ -122,14 +122,17 @@ void Server::handleMode(int client_fd, const std::string& message) {
 
 				//fonction qui gere i
 				if (modeLetter == 'i')
+				{}
 					// std::cout << "appel de 1" << modeLetter << " sign:" << sign << " mot: " <<target_value << std::endl;
 
 				//fonction qui gere t
 				if (modeLetter == 't')
+				{}
 					// std::cout << "appel de 2" << modeLetter << " sign:" << sign << " mot: " <<target_value << std::endl;
 
 				//fonction qui gere k
 				if (modeLetter == 'k')
+				{}
 					// std::cout << "appel de 3" << modeLetter << " sign:" << sign << " mot: " <<target_value << std::endl;
 
 				//fonction qui gere o
@@ -141,6 +144,7 @@ void Server::handleMode(int client_fd, const std::string& message) {
 
 				//fonction qui gere l
 				if (modeLetter == 'l')
+				{}
 					// std::cout << "appel de 5" << modeLetter << " sign:" << sign << " mot: " <<target_value << std::endl;
 				
 				(void) target_value;
