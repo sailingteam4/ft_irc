@@ -26,6 +26,20 @@ void Server::handleKick(int client_fd, const std::string& message)
     
     iss >> channel_name >> target_nick;
     
+    if (channel_name.empty() || target_nick.empty())
+    {
+        std::string nickname = client_nicknames[client_fd];
+        if (nickname.empty())
+        {
+            std::stringstream ss;
+            ss << "user" << client_fd;
+            nickname = ss.str();
+        }
+        std::string errorMsg = ":" SERVER_NAME " 461 " + nickname + " KICK :Not enough parameters\r\n";
+        send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+        return;
+    }
+    
     size_t colonPos = params.find(" :", iss.tellg());
     if (colonPos != std::string::npos)
         reason = params.substr(colonPos + 2);
