@@ -68,7 +68,7 @@ void Server::handleTopic(int client_fd, const std::string& message)
         return;
     }
     
-    if (!channel->isOperator(client_fd)) {
+    if (channel->isTopicProtected() && !channel->isOperator(client_fd)) {
         std::string errorMsg = ":" SERVER_NAME " 482 " + nickname + " " + channel_name + " :You're not channel operator\r\n";
         send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
         return;

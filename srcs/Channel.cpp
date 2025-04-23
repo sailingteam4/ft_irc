@@ -5,7 +5,7 @@
 Channel::Channel(const std::string& channelName) : name(channelName), topic("") 
 {
 	invite_only = false;
-	topic_protection = false;
+	topic_protection = true;
 	key = "";
 	user_limit = 0;
 
