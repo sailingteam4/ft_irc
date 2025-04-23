@@ -145,7 +145,7 @@ void Channel::setKey(const std::string& newKey)
 	key = newKey;
 }
 
-void Channel::setUserLimit(unsigned int limit)
+void Channel::setUserLimit(unsigned long int limit)
 {
 	user_limit = limit;
 }
