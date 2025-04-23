@@ -149,3 +149,13 @@ void Channel::setUserLimit(unsigned long limit)
 {
 	user_limit = limit;
 }
+
+unsigned long Channel::getNbUsers() const
+{
+	return users.size();
+}
+
+unsigned long Channel::getUserLimit() const
+{
+	return user_limit;
+}

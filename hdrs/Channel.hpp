@@ -29,6 +29,8 @@ class Channel
 		const std::string& getTopic() const;
 		const std::vector<int>& getUsers() const;
 		bool isOperator(int user_fd) const;
+		unsigned long getNbUsers() const;
+		unsigned long getUserLimit() const;
 		
 		// Setters
 		void setTopic(const std::string& newTopic);

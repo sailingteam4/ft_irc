@@ -54,6 +54,13 @@ void Server::handleJoin(int client_fd, const std::string& message)
             channel = findChannel(channel_name);
         }
 
+        if (channel->hasUserLimit() && channel->getNbUsers() >= channel->getUserLimit())
+        {
+            std::string errorMsg = ":" SERVER_NAME " 471 " + nickname + " " + channel_name + " :Cannot join channel (+l) - channel is full\r\n";
+            send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+            continue;
+        }
+
         channel->addUser(client_fd);
         
         std::string joinMessage = ":" + nickname + "!" SERVER_NAME " JOIN :" + channel_name + "\r\n";
