@@ -17,7 +17,7 @@ class Channel
 		bool invite_only;
 		bool topic_protection;
 		std::string key;
-		int user_limit;
+		unsigned int user_limit;
 		
 		public:
 		// Constructor and Destructor
@@ -48,7 +48,7 @@ class Channel
 		void setInviteOnly(bool status);
 		void setTopicProtected(bool status);
 		void setKey(const std::string& newKey);
-		void setUserLimit(int limit);
+		void setUserLimit(unsigned int limit);
 		
 		// User list as a formatted string for IRC responses
 		std::string getUserList(const std::map<int, std::string>& nicknames) const;
