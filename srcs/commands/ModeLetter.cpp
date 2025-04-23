@@ -86,12 +86,12 @@ void Server::ModeTopic(char modeLetter, char sign, std::string channelName, int 
 	// Active ou désactive la protection du sujet
 	if (sign == '+')
 	{
-		channel->setTopicProtected(true);
+		channel->setTopicProtected(false);
 		std::cout << "Topic protection enabled for channel: " << channelName << std::endl;
 	}
 	else if (sign == '-')
 	{
-		channel->setTopicProtected(false);
+		channel->setTopicProtected(true);
 		std::cout << "Topic protection disabled for channel: " << channelName << std::endl;
 	}
 
@@ -100,3 +100,5 @@ void Server::ModeTopic(char modeLetter, char sign, std::string channelName, int 
 	send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
 	broadcastToChannel(modeMsg, channelName, client_fd);
 }
+
+void Server::ModeLimit()
