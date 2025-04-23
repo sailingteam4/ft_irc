@@ -101,4 +101,4 @@ void Server::ModeTopic(char modeLetter, char sign, std::string channelName, int 
 	broadcastToChannel(modeMsg, channelName, client_fd);
 }
 
-void Server::ModeLimit()
+// void Server::ModeLimit()
