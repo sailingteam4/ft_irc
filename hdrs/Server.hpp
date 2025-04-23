@@ -57,6 +57,7 @@ class Server
         // ModeLetter.cpp
 		void ModeOperator(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd);
         void ModeTopic(char modeLetter, char sign, std::string channelName, int client_fd);
+        void ModeLimit(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd);
         
         // IRC command handlers
         void handlePass(int client_fd, const std::string& message);
@@ -69,7 +70,8 @@ class Server
         void handlePrivmsg(int client_fd, const std::string& message);
         void handleMode(int client_fd, const std::string& message);
 		void handleKick(int client_fd, const std::string& message);
-        std::vector<std::pair<char, char> > handleWhatMode(int client_fd, const std::string& mode);
+        std::vector<std::pair<char, char> > handleWhatMode(int client_fd, const std::string& mode, std::string channelName);
+        int parsmode(int client_fd, const std::string& mode, std::string channelName);
         
         // Registration
         void checkRegistrationStatus(int client_fd);

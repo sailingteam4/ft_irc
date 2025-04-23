@@ -2,6 +2,8 @@
 #include "Channel.hpp"
 #include "error.hpp"
 #include "ft_irc.hpp"
+#include <cerrno>
+#include <cstdlib>
 
 void Server::ModeOperator(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd)
 {
@@ -101,4 +103,60 @@ void Server::ModeTopic(char modeLetter, char sign, std::string channelName, int 
 	broadcastToChannel(modeMsg, channelName, client_fd);
 }
 
-// void Server::ModeLimit()
+void Server::ModeLimit(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd)
+{
+	if (modeLetter != 'l')
+		return;
+
+	Channel* channel = findChannel(channelName);
+	if (!channel)
+	{
+		std::string errorMsg = ":" SERVER_NAME " 403 " + client_nicknames[client_fd] + " " + channelName + " :No such channel\r\n";
+		send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+		return;
+	}
+	if (channel->isOperator(client_fd))
+	{
+		if (sign == '+')
+		{
+			if (target_value.empty())
+			{
+				std::string errorMsg = ":" SERVER_NAME " 461 " + client_nicknames[client_fd] + " " + channelName + " :Not enough parameters\r\n";
+				send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+				return;
+			}
+			char* endptr = NULL;
+			errno = 0;
+			unsigned long valeur = strtoul(target_value.c_str(), &endptr, 10);
+			if (*endptr != '\0' || errno != 0 || target_value[0] == '-')
+			{
+
+				//PAS FORCEMENT LE BON CODE D'ERREUR SOIS 472 sois 696 JE SAIS PAS TROP CA PEU AUSSI ETRE UN AUTRE
+
+				std::string errorMsg = ":" SERVER_NAME " 696 " + client_nicknames[client_fd] + " " + channelName + " +l :Invalid limit parameter\r\n";
+				send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+				return;
+			}
+	
+			unsigned long limit = valeur;
+			if (limit > 100000)
+				limit = 100000;
+			channel->setUserLimit(limit);
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " " + sign + "l new  =" + target_value + "\r\n";
+			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
+			broadcastToChannel(modeMsg, channelName, client_fd);
+			return ;
+		}
+		if (sign == '-')
+		{
+			channel->setUserLimit(0);
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " " + sign + "l no limit\r\n";
+			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
+			broadcastToChannel(modeMsg, channelName, client_fd);
+			return ;
+		}
+	}
+	std::string errorMsg = ":" SERVER_NAME " 482 " + client_nicknames[client_fd] + " " + channelName + " :You're not channel operator\r\n";
+	send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+	return;
+}

@@ -2,7 +2,6 @@
 #include "error.hpp"
 #include "ft_irc.hpp"
 
-static int parsmode(const std::string& mode);
 static std::string targetDecoupe(const std::string& target, size_t index);
 
 
@@ -85,7 +84,7 @@ void Server::handleMode(int client_fd, const std::string& message) {
 		target = "";
 	}
 
-	std::vector<std::pair<char, char> > mode_map = handleWhatMode(client_fd, mode);
+	std::vector<std::pair<char, char> > mode_map = handleWhatMode(client_fd, mode, channelName);
 	std::vector<std::pair<char, std::pair<char, std::string> > > target_mode_map; // Changed to store mode letter, sign, and target
 	if (mode_map.empty())
 	{
@@ -145,8 +144,9 @@ void Server::handleMode(int client_fd, const std::string& message) {
 
 				//fonction qui gere l
 				if (modeLetter == 'l')
-				{}
-					// std::cout << "appel de 5" << modeLetter << " sign:" << sign << " mot: " <<target_value << std::endl;
+				{
+					ModeLimit(modeLetter, sign, target_value, channelName, client_fd);
+				}
 				
 				(void) target_value;
 			}
@@ -178,7 +178,7 @@ static std::string targetDecoupe(const std::string& target, size_t index)
     return ("");
 }
 
-static int parsmode(const std::string& mode)
+int Server::parsmode(int client_fd, const std::string& mode, std::string channelName)
 {
 	typedef char char_mode;
 	typedef int nbr_mode;
@@ -204,6 +204,8 @@ static int parsmode(const std::string& mode)
 			{
 				//METTRE UN CODE DERREUR ICI NORMALEMENT LE 472, C'EST ERROR UNKNOW MODE DANS LA NORME
 				// std::cout << "Erreur mode 2: " << mode << std::endl;
+				std::string errorMsg = ":" SERVER_NAME " 472 " + client_nicknames[client_fd] + " " + channelName + " :ERROR UNKNOWN MODE\r\n";
+				send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 				return (1);
 			}
 		}
@@ -213,11 +215,11 @@ static int parsmode(const std::string& mode)
 
 
 // en gros je suis obliger d'utiliser cette horreur std::vector<std::pair<char, char> > pour laisser le dico non trier sinon par exemple +kl-o-i devenai 'i' < 'k' < 'l' < 'o' a cause de l'odre alphabetique. On l'emmerde l'ordre alphabetique pas vrai la team ?!
-std::vector<std::pair<char, char> > Server::handleWhatMode(int client_fd, const std::string& mode)
+std::vector<std::pair<char, char> > Server::handleWhatMode(int client_fd, const std::string& mode, std::string channelName)
 {
 	std::vector<std::pair<char, char> > mode_map;
 	//mode, signe + ou -
-	if (parsmode(mode) == 0)
+	if (parsmode(client_fd, mode, channelName) == 0)
 		return mode_map;
 
 	char currentSign = '+';
@@ -234,6 +236,5 @@ std::vector<std::pair<char, char> > Server::handleWhatMode(int client_fd, const 
 		}
 	}
 
-	(void)client_fd;
 	return mode_map;
 }
