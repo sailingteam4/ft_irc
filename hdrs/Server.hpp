@@ -58,6 +58,7 @@ class Server
 		void ModeOperator(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd);
         void ModeTopic(char modeLetter, char sign, std::string channelName, int client_fd);
         void ModeLimit(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd);
+        void ModeInvitation(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd);
         
         // IRC command handlers
         void handlePass(int client_fd, const std::string& message);

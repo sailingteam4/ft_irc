@@ -142,7 +142,7 @@ void Server::ModeLimit(char modeLetter, char sign, std::string target_value, std
 			if (limit > 100000)
 				limit = 100000;
 			channel->setUserLimit(limit);
-			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " " + sign + "l new  =" + target_value + "\r\n";
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " " + sign + "l " + target_value + "\r\n";
 			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
 			broadcastToChannel(modeMsg, channelName, client_fd);
 			return ;
@@ -154,6 +154,42 @@ void Server::ModeLimit(char modeLetter, char sign, std::string target_value, std
 			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
 			broadcastToChannel(modeMsg, channelName, client_fd);
 			return ;
+		}
+	}
+	std::string errorMsg = ":" SERVER_NAME " 482 " + client_nicknames[client_fd] + " " + channelName + " :You're not channel operator\r\n";
+	send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+	return;
+}
+
+void Server::ModeInvitation(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd)
+{
+	if (modeLetter != 'k')
+		return;
+
+	Channel* channel = findChannel(channelName);
+	if (!channel)
+	{
+		std::string errorMsg = ":" SERVER_NAME " 403 " + client_nicknames[client_fd] + " " + channelName + " :No such channel\r\n";
+		send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+		return;
+	}
+	if (channel->isOperator(client_fd))
+	{
+		if (sign == '+')
+		{
+			channel->setKey(target_value);
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " +k\r\n";
+			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
+			broadcastToChannel(modeMsg, channelName, client_fd);
+			return;
+		}
+		if (sign == '-')
+		{
+			channel->setKey(target_value);
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + sign + "k no key\r\n";
+			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
+			broadcastToChannel(modeMsg, channelName, client_fd);
+			return;
 		}
 	}
 	std::string errorMsg = ":" SERVER_NAME " 482 " + client_nicknames[client_fd] + " " + channelName + " :You're not channel operator\r\n";
