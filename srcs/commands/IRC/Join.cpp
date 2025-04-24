@@ -14,11 +14,18 @@ void Server::handleJoin(int client_fd, const std::string& message)
     }
 
     size_t pos = message.find("JOIN") + 5;
-    std::string channels_str = message.substr(pos);
-    if (channels_str.find("\r") != std::string::npos)
-        channels_str.erase(channels_str.find("\r"));
-    else if (channels_str.find("\n") != std::string::npos)
-        channels_str.erase(channels_str.find("\n"));
+    std::string params = message.substr(pos);
+    if (params.find("\r") != std::string::npos)
+        params.erase(params.find("\r"));
+    else if (params.find("\n") != std::string::npos)
+        params.erase(params.find("\n"));
+    
+    std::istringstream iss(params);
+    std::string channels_str;
+    std::string keys_str;
+    
+    iss >> channels_str;
+    iss >> keys_str;
 
     std::string nickname = client_nicknames[client_fd];
     if (nickname.empty())
@@ -29,10 +36,10 @@ void Server::handleJoin(int client_fd, const std::string& message)
     }
 
     std::vector<std::string> channel_names;
-    std::istringstream iss(channels_str);
+    std::istringstream channels_iss(channels_str);
     std::string single_channel;
     
-    while (std::getline(iss, single_channel, ','))
+    while (std::getline(channels_iss, single_channel, ','))
     {
         if (single_channel.empty())
             continue;
@@ -42,16 +49,31 @@ void Server::handleJoin(int client_fd, const std::string& message)
             
         channel_names.push_back(single_channel);
     }
+    
+    std::vector<std::string> keys;
+    std::istringstream keys_iss(keys_str);
+    std::string single_key;
+    
+    while (std::getline(keys_iss, single_key, ','))
+        keys.push_back(single_key);
 
     for (size_t i = 0; i < channel_names.size(); i++)
     {
         std::string channel_name = channel_names[i];
+        std::string key = (i < keys.size()) ? keys[i] : "";
         
         Channel* channel = findChannel(channel_name);
         if (channel == NULL)
         {
             createChannel(channel_name);
             channel = findChannel(channel_name);
+        }
+
+        if (channel->hasKey() && (i >= keys.size() || channel->getKey() != key))
+        {
+            std::string errorMsg = ":" SERVER_NAME " 475 " + nickname + " " + channel_name + " :Cannot join channel (+k) - bad key\r\n";
+            send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+            continue;
         }
 
         if (channel->hasUserLimit() && channel->getNbUsers() >= channel->getUserLimit())

@@ -159,3 +159,8 @@ unsigned long Channel::getUserLimit() const
 {
 	return user_limit;
 }
+
+const std::string& Channel::getKey() const
+{
+    return key;
+}

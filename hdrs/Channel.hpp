@@ -31,6 +31,7 @@ class Channel
 		bool isOperator(int user_fd) const;
 		unsigned long getNbUsers() const;
 		unsigned long getUserLimit() const;
+		const std::string& getKey() const;
 		
 		// Setters
 		void setTopic(const std::string& newTopic);
