@@ -161,7 +161,7 @@ void Server::ModeLimit(char modeLetter, char sign, std::string target_value, std
 	return;
 }
 
-void Server::ModeInvitation(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd)
+void Server::Modekey(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd)
 {
 	if (modeLetter != 'k')
 		return;
