@@ -196,3 +196,39 @@ void Server::ModeKey(char modeLetter, char sign, std::string target_value, std::
 	send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 	return;
 }
+
+void Server::ModeInvite(char modeLetter, char sign, std::string channelName, int client_fd)
+{
+	if (modeLetter != 'i')
+	return;
+
+	Channel* channel = findChannel(channelName);
+	if (!channel)
+	{
+	std::string errorMsg = ":" SERVER_NAME " 403 " + client_nicknames[client_fd] + " " + channelName + " :No such channel\r\n";
+	send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+	return;
+	}
+	if (channel->isOperator(client_fd))
+	{
+		if (sign == '+')
+		{
+			channel->setInviteOnly(true);
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " +i " + "invite_mode" + "\r\n";
+			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
+			broadcastToChannel(modeMsg, channelName, client_fd);
+			return;
+		}
+		if (sign == '-')
+		{
+			channel->setInviteOnly(false);
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " -i " + "no_invite_mode" + "\r\n";
+			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
+			broadcastToChannel(modeMsg, channelName, client_fd);
+			return;
+		}
+	}
+	std::string errorMsg = ":" SERVER_NAME " 482 " + client_nicknames[client_fd] + " " + channelName + " :You're not channel operator\r\n";
+	send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+	return;
+}
