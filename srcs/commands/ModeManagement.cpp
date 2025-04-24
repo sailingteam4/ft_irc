@@ -122,7 +122,7 @@ void Server::handleMode(int client_fd, const std::string& message) {
 				//fonction qui gere i
 				if (modeLetter == 'i')
 				{
-					ModeInvite(modeLetter, sign, channelName, client_fd);
+					ModeInvitation(modeLetter, sign, channelName, client_fd);
 					// std::cout << "appel de 1" << modeLetter << " sign:" << sign << " mot: " <<target_value << std::endl;
 				}
 

@@ -197,7 +197,7 @@ void Server::ModeKey(char modeLetter, char sign, std::string target_value, std::
 	return;
 }
 
-void Server::ModeInvite(char modeLetter, char sign, std::string channelName, int client_fd)
+void Server::ModeInvitation(char modeLetter, char sign, std::string channelName, int client_fd)
 {
 	if (modeLetter != 'i')
 	return;
