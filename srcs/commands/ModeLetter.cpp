@@ -161,7 +161,7 @@ void Server::ModeLimit(char modeLetter, char sign, std::string target_value, std
 	return;
 }
 
-void Server::Modekey(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd)
+void Server::ModeKey(char modeLetter, char sign, std::string target_value, std::string channelName, int client_fd)
 {
 	if (modeLetter != 'k')
 		return;
@@ -178,7 +178,7 @@ void Server::Modekey(char modeLetter, char sign, std::string target_value, std::
 		if (sign == '+')
 		{
 			channel->setKey(target_value);
-			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " +k\r\n";
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " +k " + "new_key" + "\r\n";
 			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
 			broadcastToChannel(modeMsg, channelName, client_fd);
 			return;
@@ -186,7 +186,7 @@ void Server::Modekey(char modeLetter, char sign, std::string target_value, std::
 		if (sign == '-')
 		{
 			channel->setKey(target_value);
-			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + sign + "k no key\r\n";
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " -k " + "no_key" + "\r\n";
 			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
 			broadcastToChannel(modeMsg, channelName, client_fd);
 			return;

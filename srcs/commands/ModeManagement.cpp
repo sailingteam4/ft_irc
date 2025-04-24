@@ -132,8 +132,10 @@ void Server::handleMode(int client_fd, const std::string& message) {
 
 				//fonction qui gere k
 				if (modeLetter == 'k')
-				{}
+				{
 					// std::cout << "appel de 3" << modeLetter << " sign:" << sign << " mot: " <<target_value << std::endl;
+					ModeKey(modeLetter, sign, target_value, channelName, client_fd);
+				}
 
 				//fonction qui gere o
 				if (modeLetter == 'o')
