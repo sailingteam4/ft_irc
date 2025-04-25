@@ -59,13 +59,32 @@ void Server::handleClientData(int client_fd)
     {
         if (bytesReceived == 0)
         {
-            std::cout << "Client socket " << client_fd << " disconnected" << std::endl;
+            std::cout << "Client socket " << client_fd << " disconnected (EOF/Ctrl+D)" << std::endl;
         }
         else
         {
             std::cerr << "Error: Could not receive data from client socket " << client_fd << std::endl;
         }
+
+        std::string nickname = client_nicknames[client_fd];
+        if (nickname.empty())
+        {
+            std::stringstream ss;
+            ss << "user" << client_fd;
+            nickname = ss.str();
+        }
+
+        for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+        {
+            if (it->hasUser(client_fd))
+            {
+                std::string quitMsg = ":" + nickname + "!" SERVER_NAME " QUIT :Connection closed\r\n";
+                broadcastToChannel(quitMsg, it->getName(), client_fd);
+            }
+        }
+        
         cleanupSocket(client_fd);
+        return;
     }
     else
     {
