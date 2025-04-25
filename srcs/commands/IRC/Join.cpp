@@ -90,6 +90,13 @@ void Server::handleJoin(int client_fd, const std::string& message)
             continue;
         }
 
+		if (channel->hasUser(client_fd))
+		{
+			std::string errorMsg = ":" SERVER_NAME " 443 " + nickname + " " + channel_name + " :is already on channel\r\n";
+			send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+			continue;
+		}
+
 		if (channel->isInviteOnly() && channel->isUserInvited(client_fd))
 			channel->uninviteUser(client_fd);
 
