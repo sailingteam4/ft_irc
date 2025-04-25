@@ -10,6 +10,13 @@ void Server::handleNick(int client_fd, const std::string& message)
     else if (nickname.find("\n") != std::string::npos)
         nickname.erase(nickname.find("\n"));
     
+    if (nickname.find(" ") != std::string::npos)
+    {
+        std::string errorMsg = ":" SERVER_NAME " 432 * " + nickname + " :Error nickname: spaces are not allowed\r\n";
+        send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+        return;
+    }
+    
     for (std::map<int, std::string>::const_iterator it = client_nicknames.begin(); it != client_nicknames.end(); ++it)
     {
         if (it->first != client_fd && it->second == nickname)
