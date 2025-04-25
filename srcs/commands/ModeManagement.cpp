@@ -61,6 +61,7 @@ void Server::handleMode(int client_fd, const std::string& message) {
 	{
 		channelName = params.substr(0, firstSpace);
 		params = params.substr(firstSpace + 1);
+		std::cout << "channelName " << channelName << std::endl;
 	}
 	else
 	{

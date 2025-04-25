@@ -177,6 +177,12 @@ void Server::ModeKey(char modeLetter, char sign, std::string target_value, std::
 	{
 		if (sign == '+')
 		{
+			if (target_value.empty())
+			{
+				std::string errorMsg = ":" SERVER_NAME " 461 " + client_nicknames[client_fd] + " " + channelName + " :Not enough parameters\r\n";
+				send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+				return;
+			}
 			channel->setKey(target_value);
 			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " +k " + "new_key" + "\r\n";
 			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
