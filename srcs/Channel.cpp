@@ -8,6 +8,7 @@ Channel::Channel(const std::string& channelName) : name(channelName), topic("")
 	topic_protection = true;
 	key = "";
 	user_limit = 0;
+	invited_users.clear();
 
 	if (name.empty())
 		name = "#default_channel";
@@ -164,3 +165,22 @@ const std::string& Channel::getKey() const
 {
     return key;
 }
+
+bool Channel::isUserInvited(int user_fd) const
+{
+	return std::find(invited_users.begin(), invited_users.end(), user_fd) != invited_users.end();
+}
+
+void Channel::inviteUser(int user_fd)
+{
+	if (!isUserInvited(user_fd))
+		invited_users.push_back(user_fd);
+}
+
+void Channel::uninviteUser(int user_fd)
+{
+	std::vector<int>::iterator it = std::find(invited_users.begin(), invited_users.end(), user_fd);
+	if (it != invited_users.end())
+		invited_users.erase(it);
+}
+

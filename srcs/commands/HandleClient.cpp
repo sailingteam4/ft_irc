@@ -187,6 +187,12 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
 		handlePart(client_fd, message);
 		return;
 	}
+
+	else if (message.find("INVITE ") == 0)
+	{
+		handleInvite(client_fd, message);
+		return;
+	}
 	
     else
     {

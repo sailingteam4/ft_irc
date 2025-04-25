@@ -76,12 +76,22 @@ void Server::handleJoin(int client_fd, const std::string& message)
             continue;
         }
 
+        if (channel->isInviteOnly() && !channel->isUserInvited(client_fd))
+        {
+            std::string errorMsg = ":" SERVER_NAME " 473 " + nickname + " " + channel_name + " :Cannot join channel (+i) - you must be invited\r\n";
+            send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+            continue;
+        }
+
         if (channel->hasUserLimit() && channel->getNbUsers() >= channel->getUserLimit())
         {
             std::string errorMsg = ":" SERVER_NAME " 471 " + nickname + " " + channel_name + " :Cannot join channel (+l) - channel is full\r\n";
             send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
             continue;
         }
+
+		if (channel->isInviteOnly() && channel->isUserInvited(client_fd))
+			channel->uninviteUser(client_fd);
 
         channel->addUser(client_fd);
         

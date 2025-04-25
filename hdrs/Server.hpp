@@ -74,6 +74,7 @@ class Server
 		void handleKick(int client_fd, const std::string& message);
         void handleList(int client_fd, const std::string& message);
 		void handlePart(int client_fd, const std::string& message);
+		void handleInvite(int client_fd, const std::string& message);
         std::vector<std::pair<char, char> > handleWhatMode(int client_fd, const std::string& mode, std::string channelName);
         int parsmode(int client_fd, const std::string& mode, std::string channelName);
         

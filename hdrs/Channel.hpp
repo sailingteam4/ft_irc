@@ -12,6 +12,7 @@ class Channel
 		std::string topic;
 		std::vector<int> users;
 		std::map<int, bool> operators;
+		std::vector<int> invited_users;
 
 		// Channel modes
 		bool invite_only;
@@ -47,6 +48,9 @@ class Channel
 		bool isTopicProtected() const;
 		bool hasKey() const;
 		bool hasUserLimit() const;
+		bool isUserInvited(int user_fd) const;
+		void inviteUser(int user_fd);
+		void uninviteUser(int user_fd);
 
 		void setInviteOnly(bool status);
 		void setTopicProtected(bool status);
