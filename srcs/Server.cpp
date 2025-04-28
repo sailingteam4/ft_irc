@@ -55,7 +55,7 @@ void Server::run()
 {
     fd_set read_fds;
     
-    while (true)
+    while (!stopServer)
     {
         read_fds = master_set;
         
