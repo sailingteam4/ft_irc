@@ -163,7 +163,7 @@ void Server::handleDccSend(int client_fd, const std::string& nickname, const std
     
     if (ipAddress.empty())
     {
-        ipAddress = "127.0.0.1";
+        ipAddress = "0.0.0.0";
         port = "0"; 
     }
     
