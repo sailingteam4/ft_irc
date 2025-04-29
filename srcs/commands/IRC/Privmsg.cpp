@@ -164,7 +164,7 @@ void Server::handleDccSend(int client_fd, const std::string& nickname, const std
     if (ipAddress.empty())
     {
         ipAddress = "127.0.0.1";
-        port = "0"; 
+        port = "5672"; 
     }
     
     std::string senderMsg = ":" SERVER_NAME " NOTICE " + nickname + " :DCC SEND request for " + filename + " is being processed.\r\n";
