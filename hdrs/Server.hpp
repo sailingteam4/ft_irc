@@ -70,6 +70,7 @@ class Server
         void handleJoin(int client_fd, const std::string& message);
         void handleTopic(int client_fd, const std::string& message);
         void handlePrivmsg(int client_fd, const std::string& message);
+        void handleDccSend(int client_fd, const std::string& nickname, const std::string& target, const std::string& content); // Added for file transfers
         void handleMode(int client_fd, const std::string& message);
 		void handleKick(int client_fd, const std::string& message);
         void handleList(int client_fd, const std::string& message);
