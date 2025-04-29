@@ -6,7 +6,7 @@
 /*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:57:01 by mbico             #+#    #+#             */
-/*   Updated: 2025/04/29 19:02:54 by nrontey          ###   ########.fr       */
+/*   Updated: 2025/04/29 22:36:16 by nrontey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ extern	bool stopServer;
 
 #define SERVER_NAME "feur.apagnan.bebou"
 #define DCC_IP "127.0.0.1"
+#define DCC_PORT "0"
 
 void		argValid(int argc);
 uint16_t	portValid(const char *strPort);
