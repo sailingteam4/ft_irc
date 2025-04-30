@@ -62,8 +62,6 @@ void Server::ModeOperator(char modeLetter, char sign, std::string target_value, 
 	}
 }
 
-
-//NE FONCTIONNE PAS
 void Server::ModeTopic(char modeLetter, char sign, std::string channelName, int client_fd)
 {
 	if (modeLetter != 't')
@@ -77,7 +75,6 @@ void Server::ModeTopic(char modeLetter, char sign, std::string channelName, int 
 		return;
 	}
 
-	// Vérifie si le client est opérateur uniquement si le mode `t` est activé
 	if (channel->isTopicProtected() && !channel->isOperator(client_fd))
 	{
 		std::string errorMsg = ":" SERVER_NAME " 482 " + client_nicknames[client_fd] + " " + channelName + " :You're not channel operator\r\n";
@@ -85,7 +82,6 @@ void Server::ModeTopic(char modeLetter, char sign, std::string channelName, int 
 		return;
 	}
 
-	// Active ou désactive la protection du sujet
 	if (sign == '+')
 	{
 		channel->setTopicProtected(false);
@@ -97,7 +93,6 @@ void Server::ModeTopic(char modeLetter, char sign, std::string channelName, int 
 		std::cout << "Topic protection disabled for channel: " << channelName << std::endl;
 	}
 
-	// Diffuse le changement de mode
 	std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " " + sign + "t\r\n";
 	send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
 	broadcastToChannel(modeMsg, channelName, client_fd);
@@ -130,10 +125,7 @@ void Server::ModeLimit(char modeLetter, char sign, std::string target_value, std
 			unsigned long valeur = strtoul(target_value.c_str(), &endptr, 10);
 			if (*endptr != '\0' || errno != 0 || target_value[0] == '-')
 			{
-
-				//PAS FORCEMENT LE BON CODE D'ERREUR SOIS 472 sois 696 JE SAIS PAS TROP CA PEU AUSSI ETRE UN AUTRE
-
-				std::string errorMsg = ":" SERVER_NAME " 696 " + client_nicknames[client_fd] + " " + channelName + " +l :Invalid limit parameter\r\n";
+				std::string errorMsg = ":" SERVER_NAME " 472 " + client_nicknames[client_fd] + " " + channelName + " +l :Invalid limit parameter\r\n";
 				send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 				return;
 			}
