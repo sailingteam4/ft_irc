@@ -3,6 +3,31 @@
 #include "ft_irc.hpp"
 #include <sstream>
 
+bool isValidChannelName(const std::string& name)
+{
+    if (name.length() < 2 || name.length() > 64)
+        return false;
+    
+    if (name[0] != '#')
+        return false;
+    
+    for (size_t i = 1; i < name.length(); i++)
+    {
+        char c = name[i];
+        if (c <= 32 || c == 127 ||
+            c == ',' || c == ':' || c == ';' ||
+            c == '#' || c == '@' || c == '!' ||
+            c == '&' || c == '+' || c == '%' ||
+            c == '*' || c == '?' || c == '$' ||
+            c == '(' || c == ')' || c == '<' || c == '>' ||
+            c == '"' || c == '\'')
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 void Server::handleJoin(int client_fd, const std::string& message)
 {
     if (client_info.find(client_fd) == client_info.end() || 
@@ -46,6 +71,13 @@ void Server::handleJoin(int client_fd, const std::string& message)
             
         if (single_channel[0] != '#')
             single_channel = "#" + single_channel;
+            
+        if (!isValidChannelName(single_channel))
+        {
+            std::string errorMsg = ":" SERVER_NAME " 403 " + nickname + " " + single_channel + " :Invalid channel name\r\n";
+            send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+            continue;
+        }
             
         channel_names.push_back(single_channel);
     }
