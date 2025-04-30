@@ -1,6 +1,7 @@
 #include "Server.hpp"
 #include "error.hpp"
 #include "ft_irc.hpp"
+#include <cctype>
 
 void Server::handleNick(int client_fd, const std::string& message)
 {
@@ -15,6 +16,30 @@ void Server::handleNick(int client_fd, const std::string& message)
         std::string errorMsg = ":" SERVER_NAME " 432 * " + nickname + " :Error nickname: spaces are not allowed\r\n";
         send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
         return;
+    }
+    
+    if (nickname.length() > 9)
+    {
+        std::string errorMsg = ":" SERVER_NAME " 432 * " + nickname + " :Error nickname: must be 9 characters or less\r\n";
+        send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+        return;
+    }
+    
+    for (size_t i = 0; i < nickname.length(); ++i)
+    {
+        if (isdigit(nickname[i]))
+        {
+            std::string errorMsg = ":" SERVER_NAME " 432 * " + nickname + " :Error nickname: numeric characters are not allowed\r\n";
+            send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+            return;
+        }
+        
+        if (!isalpha(nickname[i]))
+        {
+            std::string errorMsg = ":" SERVER_NAME " 432 * " + nickname + " :Error nickname: special characters are not allowed\r\n";
+            send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+            return;
+        }
     }
     
     for (std::map<int, std::string>::const_iterator it = client_nicknames.begin(); it != client_nicknames.end(); ++it)
