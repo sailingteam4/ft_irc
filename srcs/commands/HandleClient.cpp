@@ -126,6 +126,13 @@ void Server::handleClientData(int client_fd)
 
 void Server::handleClientMessage(int client_fd, const std::string& message)
 {
+    if (message.length() > 400)
+    {
+        std::string errorMsg = "Error: Message too long. Maximum length is 400 characters.\r\n";
+        send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+        return;
+    }
+
     std::cout << "Received from socket " << client_fd << ": " << message << std::endl;
 
     if (message.find("PASS ") == 0)
