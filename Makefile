@@ -6,18 +6,23 @@
 #    By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/14 23:42:46 by mbico             #+#    #+#              #
-#    Updated: 2025/04/17 00:13:19 by nrontey          ###   ########.fr        #
+#    Updated: 2025/05/05 19:10:28 by mbico            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = c++
-CFLAGS = -std=c++98 -Wall -Werror -Wextra
+CFLAGS = -std=c++98 -Wall -Werror -Wextra -g
 NAME = irc
+NAME_BOT = bot
 
 SRCS = $(shell find ./srcs -name '*.cpp')
+SRCS_BOT = $(shell find ./srcs_bot -name '*.cpp')
 HDRS = ./hdrs
+HDRS_BOT = ./hdrs_bot
 OBJS_DIR = ./obj
+OBJS_DIR_BOT = ./obj_bot
 OBJS = $(SRCS:./srcs/%.cpp=$(OBJS_DIR)/%.o)
+OBJS_BOT = $(SRCS_BOT:./srcs_bot/%.cpp=$(OBJS_DIR_BOT)/%.o)
 
 RED = $(shell tput setaf 1)
 GREEN = $(shell tput setaf 2)
@@ -28,15 +33,27 @@ NC = $(shell tput sgr0)
 
 all: $(NAME)
 
+bonus: $(NAME_BOT)
+
 $(NAME): $(OBJS)
 	@echo "$(BLUE)Linking objects...$(NC)"
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -I $(HDRS)
 	@echo "$(GREEN)$(NAME) compilation successful!$(NC)"
 
+$(NAME_BOT): $(OBJS_BOT)
+	@echo "$(BLUE)Linking objects...$(NC)"
+	@$(CC) $(CFLAGS) $(OBJS_BOT) -o $(NAME_BOT) -I $(HDRS_BOT)
+	@echo "$(GREEN)$(NAME_BOT) compilation successful!$(NC)"
+
 $(OBJS_DIR)/%.o: ./srcs/%.cpp
 	@mkdir -p $(dir $@)
 	@echo "$(YELLOW)Compiling $(notdir $<)...$(NC)"
 	@$(CC) $(CFLAGS) -c $< -o $@ -I $(HDRS)
+
+$(OBJS_DIR_BOT)/%.o: ./srcs_bot/%.cpp
+	@mkdir -p $(dir $@)
+	@echo "$(YELLOW)Compiling $(notdir $<)...$(NC)"
+	@$(CC) $(CFLAGS) -c $< -o $@ -I $(HDRS_BOT)
 
 clean:
 	@if [ -d $(OBJS_DIR) ]; then \
@@ -45,11 +62,19 @@ clean:
 	else \
 		echo "$(YELLOW)No object files to remove.$(NC)"; \
 	fi
+	@if [ -d $(OBJS_DIR_BOT) ]; then \
+		echo "$(RED)Removing bonus object files...$(NC)"; \
+		rm -rf $(OBJS_DIR_BOT); \
+	else \
+		echo "$(YELLOW)No bonus object files to remove.$(NC)"; \
+	fi
 
 fclean: clean
 	@echo "$(RED)Removing $(NAME)...$(NC)"
 	@rm -f $(NAME)
+	@echo "$(RED)Removing $(NAME_BOT)...$(NC)"
+	@rm -f $(NAME_BOT)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all bonus clean fclean re

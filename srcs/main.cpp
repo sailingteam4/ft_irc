@@ -6,7 +6,7 @@
 /*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 20:43:18 by mbico             #+#    #+#             */
-/*   Updated: 2025/04/28 07:01:26 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/05 20:32:11 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 	std::string	password;
 
 	std::signal(SIGINT, signalHandler);
+	std::signal(SIGPIPE, SIG_IGN);
 	try {
 		argValid(argc);
 		port = portValid(argv[1]);
