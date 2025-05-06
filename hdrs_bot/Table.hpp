@@ -6,12 +6,14 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 20:20:07 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/05 21:52:07 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/06 03:08:50 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include "Card.hpp"
+#include "Player.hpp"
 #include <stdint.h>
 #include <string>
 
@@ -28,8 +30,7 @@ static const uint64_t	initBet[][3] = {{100, 150, 200},\
 				{560000, 840000, 1120000},\
 				{7200000, 10800000, 14400000},\
 				{300000000, 450000000, 600000000},\
-				{47000000000, 70500000000, 94000000000},\
-				{2.9e13, 4.35e13, 5.8e13}
+				{47000000000, 70500000000, 94000000000},
 };
 
 class	Table {
@@ -40,8 +41,15 @@ class	Table {
 		uint32_t	_cardRemains;
 		uint32_t	_handRemains;
 		uint32_t	_discardRemains;
+
+		uint32_t	_mult;
+		uint32_t	_tokens;
+
+		Card		*_deck;
+		Card		*_playHand;
+		Card		*_Hand;
 	public :
-		Table(void);
+		Table(Player player);
 		~Table(void);
 		void	nextRound(uint32_t round);	
 };

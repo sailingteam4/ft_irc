@@ -6,7 +6,7 @@
 /*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:57:01 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/05 19:30:19 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/05 22:32:47 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 #include <stdint.h>
 #include <iostream>
-#include <hdrs/ft_irc.hpp>
 #include <string>
 #include <cstring>
 #include <unistd.h>

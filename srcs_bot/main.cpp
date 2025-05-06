@@ -6,12 +6,13 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:56:43 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/05 19:36:27 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/06 02:10:38 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "error.hpp"
 #include "bot.hpp"
+#include "Player.hpp"
 
 errno_irc_code errno_irc = NO_ERROR;
 
@@ -55,6 +56,11 @@ void	serverRun(int sockfd)
     close(sockfd);
 }
 
+void	test()
+{
+	Player	player;
+}
+
 int	main(int argc, char *argv[])
 {
 	uint16_t	port;
@@ -66,6 +72,7 @@ int	main(int argc, char *argv[])
 		port = portValid(argv[1]);
 		password = passwordValid(argv[2]);
 		sockfd = serverInit(port, password);
+		test();
 		if (sockfd < 0)
 			return (1);
 		serverRun(sockfd);
