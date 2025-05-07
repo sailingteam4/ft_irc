@@ -6,19 +6,21 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 23:21:25 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/06 01:39:40 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/07 01:07:18 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <stdint.h>
+#include <vector>
+#include <string>
 
-typedef enum	e_color {
+enum	e_color {
 	SPIKE,
 	HEART,
 	CLUB,
 	DIAMOND,
-}	t_color;
+};
 
 enum	e_edition {
 	NO_EDITION,
@@ -48,6 +50,17 @@ enum	e_seal {
 	PURPLE_SEALS,
 };
 
+static const std::string	value_str[] = {"", "A", "2", "3", "4", "5", "6",\
+			"7", "8", "9", "10", "J", "Q", "K"};
+
+static const std::string	color_str[] = {"♠", "♥", "♣", "♦"};
+
+static const std::string	edition_str[] = {"", "/F", "/H", "/P", "/N"};
+
+static const std::string	enhancement_str[] = {"", ".bo", ".mu", ".wi", ".gl", ".sl", ".sn", ".go", ".lu"};
+
+static const std::string	seal_str[] = {"", "*G", "*R", "*B", "*P"};
+
 #define	JACK 11
 #define	QUEEN 12
 #define	KING 13
@@ -75,10 +88,10 @@ class Card {
 		e_edition		getEdition() const;
 		e_enhancement	getEnhancement() const;
 		e_seal			getSeal() const;
+		std::string		getStr() const;
 
 		void	setCardDefault(void);
 
 };
 
-Card	*cardList(uint32_t n);
-Card	*defaultDeck();
+std::vector<Card>	defaultDeck();

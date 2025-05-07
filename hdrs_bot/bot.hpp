@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:38:43 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/05 19:42:33 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/07 00:02:17 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,3 +36,4 @@ uint16_t	portValid(const char *strPort);
 std::string	passwordValid(const char *password);
 void		argValid(int argc);
 int			commandHandle(int32_t sockfd);
+int			randint(int min, int max);

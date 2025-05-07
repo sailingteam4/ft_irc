@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 23:43:49 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/06 02:34:45 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/07 01:09:47 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,14 +98,10 @@ void	Card::setCardDefault()
 	_seal = NO_SEAL;
 }
 
-Card	*cardList(uint32_t n) {
-	if (n < 1)
-	{
-		std::cerr << RED << "ERROR: Bad card list size !" << RESET << std::endl;
-		return (NULL);
-	}
-	Card	*cards = new Card[n];
-	std::cout << YELLOW << "[System]: Cardlist size= " << n << " created" << RESET << std::endl;
-	return (cards);
-}
+std::string	Card::getStr() const
+{
+	std::string	str;
 
+	str = value_str[_value] + color_str[_color] + edition_str[_edition] + enhancement_str[_enhancement] + seal_str[_seal];
+	return(str);
+}
