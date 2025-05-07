@@ -6,12 +6,14 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 23:43:49 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/07 01:09:47 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/07 23:43:30 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Card.hpp"
 #include "color.hpp"
+#include "bot.hpp"
+#include "Screen.hpp"
 #include <iostream>
 
 Card::Card(uint8_t value, e_color color)
@@ -98,10 +100,15 @@ void	Card::setCardDefault()
 	_seal = NO_SEAL;
 }
 
-std::string	Card::getStr() const
+std::vector<std::string>	Card::getImg() const
 {
-	std::string	str;
+	std::vector<std::string>	img;
 
-	str = value_str[_value] + color_str[_color] + edition_str[_edition] + enhancement_str[_enhancement] + seal_str[_seal];
-	return(str);
+	img.push_back(CARD_TOP);
+	img.push_back(CARD_ICON(color_str[_color]));
+	img.push_back(CARD_MID(value_str[_value]));
+	img.push_back(CARD_RICON(color_str[_color]));
+	img.push_back(CARD_BTM);
+
+	return(img);
 }

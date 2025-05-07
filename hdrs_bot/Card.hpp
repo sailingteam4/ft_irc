@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 23:21:25 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/07 01:07:18 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/08 00:20:52 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <vector>
 #include <string>
+#include "color.hpp"
 
 enum	e_color {
 	SPIKE,
@@ -50,10 +51,22 @@ enum	e_seal {
 	PURPLE_SEALS,
 };
 
-static const std::string	value_str[] = {"", "A", "2", "3", "4", "5", "6",\
-			"7", "8", "9", "10", "J", "Q", "K"};
+# define CARD_TOP			"╭─────╮"
+# define CARD_ICON(color)	"│" + color + "    │"
+# define CARD_MID(value)	"│ " + value + "  │"
+# define CARD_RICON(color)	"│    " + color + "│"
+# define CARD_BTM			"╰─────╯"
 
-static const std::string	color_str[] = {"♠", "♥", "♣", "♦"};
+# define CARD_TOP_T			"╭──┈"
+# define CARD_ICON_T(color)	"│" + color
+# define CARD_MID_T(value)	"│ " + value
+# define CARD_RICON_T		"│   "
+# define CARD_BTM_T			"╰──┈"
+
+static const std::string	value_str[] = {"  ", " A", " 2", " 3", " 4", " 5", " 6",\
+			" 7", " 8", " 9", "10", " J", " Q", " K"};
+
+static const std::string	color_str[] = {HEXBLACK + "♠" + HEXRESET, HEXRED + "♥" + HEXRESET, HEXBLACK + "♣" + HEXRESET, HEXRED + "♦" + HEXRESET};
 
 static const std::string	edition_str[] = {"", "/F", "/H", "/P", "/N"};
 
@@ -88,10 +101,10 @@ class Card {
 		e_edition		getEdition() const;
 		e_enhancement	getEnhancement() const;
 		e_seal			getSeal() const;
-		std::string		getStr() const;
+
+		std::vector<std::string>	getImg() const;
 
 		void	setCardDefault(void);
-
 };
 
 std::vector<Card>	defaultDeck();

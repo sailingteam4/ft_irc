@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Color.hpp                                          :+:      :+:    :+:   */
+/*   color.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 00:32:39 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/06 00:32:50 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/07 21:54:17 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+
+#include <string>
 
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
@@ -29,3 +31,13 @@
 #define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
 #define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
 #define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+
+
+const char COLOR_CHAR = 3;   // \x03 (Ctrl+K)
+const char RESET_CHAR = 15;  // \x0F
+
+#define	HEXRED std::string(1, COLOR_CHAR) + "04"
+#define	HEXBLACK std::string(1, COLOR_CHAR) + "01"
+#define	HEXRESET std::string(1, RESET_CHAR)
+
+

@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 02:23:29 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/07 03:22:58 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/07 17:42:27 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ bool	isFiveofaKind(std::vector<Card> hand)
 	return (true);
 }
 
-bool	isFourofaKind(std::vector<Card> hand)
-{
-	if (hand.size() < 4)
-		return (false);
-	for (int i <)
-}
+/* bool	isFourofaKind(std::vector<Card> hand) */
+/* { */
+/* 	if (hand.size() < 4) */
+/* 		return (false); */
+/* 	for (int i <) */
+/* } */
 
 bool	isFlush(std::vector<Card> hand)
 {

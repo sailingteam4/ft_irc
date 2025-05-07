@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 20:20:07 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/07 02:15:43 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/07 21:20:22 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ class	Table {
 		void	firtHand(Player player);
 
 		void	displayHand(int sockfd) const;
+
+		std::vector<Card>	getHand();
 };
 
 

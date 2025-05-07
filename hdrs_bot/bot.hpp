@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:38:43 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/07 00:02:17 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/08 00:16:12 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #define	NAME "bot"
 #define	CHANNEL	"#test"
 #define	TAG	"!"
+static const std::string	privmsg = "PRIVMSG " CHANNEL " :";
 
 uint16_t	ft_atous(const char *str);
 uint16_t	portValid(const char *strPort);
@@ -37,3 +38,4 @@ std::string	passwordValid(const char *password);
 void		argValid(int argc);
 int			commandHandle(int32_t sockfd);
 int			randint(int min, int max);
+uint32_t	countSymbole(std::string str);

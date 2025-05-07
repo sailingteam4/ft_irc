@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:56:43 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/07 01:13:22 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/07 22:42:50 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "bot.hpp"
 #include "Player.hpp"
 #include "Table.hpp"
+#include "Screen.hpp"
 
 errno_irc_code errno_irc = NO_ERROR;
 
@@ -59,7 +60,6 @@ void	serverRun(int sockfd)
 
 void	test1()
 {
-
 }
 
 int	main(int argc, char *argv[])

@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 20:33:22 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/07 02:17:55 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/07 23:20:39 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,22 @@ void	Table::firtHand(Player player)
 	_hand = sortValue(_hand);
 }
 
-void	Table::displayHand(int sockfd) const
-{
-	std::string	str = "PRIVMSG " CHANNEL " :";
-	for (int i = 0; i < (int)_hand.size(); i ++)
-	{
-		str += _hand[i].getStr();
-		if (i != (int)_hand.size() - 1)
-			str += " ";
-	}
-	str += "\r\n";
-	std::cout << str << std::endl;
-	send(sockfd, str.c_str(), str.length(), 0);
+#define	RED_HEC
+
+/* void	Table::displayHand(int sockfd) const */
+/* { */
+/* 	std::string	str = "PRIVMSG " CHANNEL " :" + HEXRED; */
+/* 	for (int i = 0; i < (int)_hand.size(); i ++) */
+/* 	{ */
+/* 		str += _hand[i].getStr(); */
+/* 		if (i != (int)_hand.size() - 1) */
+/* 			str += " " + HEXRESET; */
+/* 	} */
+/* 	str += "\r\n"; */
+/* 	std::cout << str << std::endl; */
+/* 	send(sockfd, str.c_str(), str.length(), 0); */
+/* } */
+
+std::vector<Card>	Table::getHand() {
+	return (_hand);
 }
