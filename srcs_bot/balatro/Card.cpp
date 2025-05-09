@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 23:43:49 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/09 16:30:32 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/09 17:44:30 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,79 +100,52 @@ void	Card::setCardDefault()
 	_seal = NO_SEAL;
 }
 
-std::vector<std::string> getCardTop() {
-	std::vector<std::string> line;
-	line.push_back("╭");
-	line.push_back("─");
-	line.push_back("─");
-	line.push_back("─");
-	line.push_back("─");
-	line.push_back("─");
-	line.push_back("╮");
-	return line;
-}
-
-// Ligne avec couleur en haut à gauche
-std::vector<std::string> getCardIcon(const std::string& color) {
-	std::vector<std::string> line;
-	line.push_back("│");
-	line.push_back(color);
-	line.push_back(" ");
-	line.push_back(" ");
-	line.push_back(" ");
-	line.push_back(" ");
-	line.push_back("│");
-	return line;
-}
-
-// Ligne du milieu avec la valeur
-std::vector<std::string> getCardMid(const std::string& value) {
-	std::vector<std::string> line;
-	line.push_back("│");
-	line.push_back(" ");
-	line.push_back(std::string(1, value[0]));
-	line.push_back(std::string(1, value[1]));
-	line.push_back(" ");
-	line.push_back(" ");
-	line.push_back("│");
-	return line;
-}
-
-// Ligne avec couleur en bas à droite
-std::vector<std::string> getCardRIcon(const std::string& color) {
-	std::vector<std::string> line;
-	line.push_back("│");
-	line.push_back(" ");
-	line.push_back(" ");
-	line.push_back(" ");
-	line.push_back(" ");
-	line.push_back(color);
-	line.push_back("│");
-	return line;
-}
-
-// Ligne du bas
-std::vector<std::string> getCardBottom() {
-	std::vector<std::string> line;
-	line.push_back("╰");
-	line.push_back("─");
-	line.push_back("─");
-	line.push_back("─");
-	line.push_back("─");
-	line.push_back("─");
-	line.push_back("╯");
-	return line;
+std::vector<std::string> makeLine(const char* elems[], size_t size) {
+    std::vector<std::string> line;
+    for (size_t i = 0; i < size; ++i) {
+        line.push_back(elems[i]);
+    }
+    return line;
 }
 
 std::vector<std::vector<std::string> >	Card::getImg() const
 {
 	std::vector<std::vector<std::string> >	img;
+	
+	char val1[2] = { value_str[_value][0], '\0' };
+	char val2[2] = { value_str[_value][1], '\0' };
+	const char* card[5][7] = {
+							{"╭", "─", "─", "─", "─", "─", "╮"},
+							{"│", color_str[_color].c_str(), " ", " ", " ", " ", "│"},
+							{"│", " ", " ", val1, val2, " ", "│"},
+							{"│", " ", " ", " ", " ", color_str[_color].c_str(), "│"},
+							{"╰", "─", "─", "─", "─", "─", "╯"}
+	};
 
-	img.push_back(getCardTop());
-	img.push_back(getCardIcon(color_str[_color]));
-	img.push_back(getCardMid(value_str[_value]));
-	img.push_back(getCardRIcon(color_str[_color]));
-	img.push_back(getCardBottom());
+	std::cout << color_str[_color].c_str() << std::endl; 
 
+	for (int i = 0; i < 5; i ++)
+		img.push_back(makeLine(card[i], 7));
 	return(img);
 }
+
+std::vector<std::vector<std::string> >	Card::getCovertImg() const
+{
+	std::vector<std::vector<std::string> >	img;
+	
+	char val1[2] = { value_str[_value][0], '\0' };
+	char val2[2] = { value_str[_value][1], '\0' };
+	const char* card[5][4] = {
+							{"┈", "─", "─", "╮"},
+							{" ", " ", " ", "│"},
+							{val1, val2, " ", "│"},
+							{" ", " ", color_str[_color].c_str(), "│"},
+							{"┈", "─", "─", "╯"}
+	};
+
+	for (int i = 0; i < 5; i ++)
+		img.push_back(makeLine(card[i], 4));
+	return(img);
+}
+
+

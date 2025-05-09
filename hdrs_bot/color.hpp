@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 00:32:39 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/07 21:54:17 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/09 17:51:19 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@
 #define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
 
 
-const char COLOR_CHAR = 3;   // \x03 (Ctrl+K)
-const char RESET_CHAR = 15;  // \x0F
+const char COLOR_CHAR = 3;
+const char RESET_CHAR = 15;
 
 #define	HEXRED std::string(1, COLOR_CHAR) + "04"
 #define	HEXBLACK std::string(1, COLOR_CHAR) + "01"

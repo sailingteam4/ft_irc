@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 21:55:13 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/09 16:38:54 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/09 17:41:54 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Screen::Screen()
 		std::string	line = "";
 		_screen.push_back(std::vector<std::string>());
 		for (uint32_t x = 0; x < _lenx; x ++)
-			_screen[y].push_back(".");
+			_screen[y].push_back(BACKGROUND);
 	}
 }
 
@@ -71,7 +71,6 @@ void	Screen::putImage(std::vector<std::vector<std::string> > img, uint32_t x, ui
 
 	if (x >= _lenx || y >= _leny || y + img.size() >= _leny || x + img[0].size() >= _lenx)
 		return;
-	std::cout << "test"<< std::endl;
 	for (int yr = 0; yr < (int)img.size(); yr ++)
 	{
 		int	xr;

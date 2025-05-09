@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 21:55:03 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/09 16:31:24 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/09 17:40:29 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <string>
 #include <iostream>
 
-#define	BACKGROUND "."
+#define	BACKGROUND " "
 
 class	Screen {
 	private:
