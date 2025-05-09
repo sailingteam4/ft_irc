@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 23:21:25 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/08 00:20:52 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/09 16:14:11 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,11 @@ enum	e_seal {
 	PURPLE_SEALS,
 };
 
-# define CARD_TOP			"╭─────╮"
-# define CARD_ICON(color)	"│" + color + "    │"
-# define CARD_MID(value)	"│ " + value + "  │"
-# define CARD_RICON(color)	"│    " + color + "│"
-# define CARD_BTM			"╰─────╯"
+# define CARD_TOP			{"╭", "─", "─", "─", "─", "─", "╮"}
+# define CARD_ICON(color)	{"│", "color", " ", " ", " ", " ", "│"}
+# define CARD_MID(value)	{"│", " ", value[0], value[1], " ", " ",  "│"}
+# define CARD_RICON(color)	{"│", " ", " ", " ", " ", color, "│"}
+# define CARD_BTM			{"╰", "─", "─", "─", "─", "─", "╯"}
 
 # define CARD_TOP_T			"╭──┈"
 # define CARD_ICON_T(color)	"│" + color
@@ -102,7 +102,7 @@ class Card {
 		e_enhancement	getEnhancement() const;
 		e_seal			getSeal() const;
 
-		std::vector<std::string>	getImg() const;
+		std::vector<std::vector<std::string> >	getImg() const;
 
 		void	setCardDefault(void);
 };

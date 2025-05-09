@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 19:27:17 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/07 23:43:49 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/09 16:39:13 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	test(int sockfd)
 	Screen	screen;
 	table.firtHand(player);
 	screen.putImage(table.getHand()[0].getImg(), 3, 5);
-	/* screen.putImage(table.getHand()[1].getImg(), 50, 5); */
+	screen.putImage(table.getHand()[1].getImg(), 50, 5);
 
 
 	screen.displayScreen(sockfd);

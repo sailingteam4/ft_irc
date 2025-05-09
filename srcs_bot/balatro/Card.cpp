@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 23:43:49 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/07 23:43:30 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/09 16:30:32 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,15 +100,79 @@ void	Card::setCardDefault()
 	_seal = NO_SEAL;
 }
 
-std::vector<std::string>	Card::getImg() const
-{
-	std::vector<std::string>	img;
+std::vector<std::string> getCardTop() {
+	std::vector<std::string> line;
+	line.push_back("╭");
+	line.push_back("─");
+	line.push_back("─");
+	line.push_back("─");
+	line.push_back("─");
+	line.push_back("─");
+	line.push_back("╮");
+	return line;
+}
 
-	img.push_back(CARD_TOP);
-	img.push_back(CARD_ICON(color_str[_color]));
-	img.push_back(CARD_MID(value_str[_value]));
-	img.push_back(CARD_RICON(color_str[_color]));
-	img.push_back(CARD_BTM);
+// Ligne avec couleur en haut à gauche
+std::vector<std::string> getCardIcon(const std::string& color) {
+	std::vector<std::string> line;
+	line.push_back("│");
+	line.push_back(color);
+	line.push_back(" ");
+	line.push_back(" ");
+	line.push_back(" ");
+	line.push_back(" ");
+	line.push_back("│");
+	return line;
+}
+
+// Ligne du milieu avec la valeur
+std::vector<std::string> getCardMid(const std::string& value) {
+	std::vector<std::string> line;
+	line.push_back("│");
+	line.push_back(" ");
+	line.push_back(std::string(1, value[0]));
+	line.push_back(std::string(1, value[1]));
+	line.push_back(" ");
+	line.push_back(" ");
+	line.push_back("│");
+	return line;
+}
+
+// Ligne avec couleur en bas à droite
+std::vector<std::string> getCardRIcon(const std::string& color) {
+	std::vector<std::string> line;
+	line.push_back("│");
+	line.push_back(" ");
+	line.push_back(" ");
+	line.push_back(" ");
+	line.push_back(" ");
+	line.push_back(color);
+	line.push_back("│");
+	return line;
+}
+
+// Ligne du bas
+std::vector<std::string> getCardBottom() {
+	std::vector<std::string> line;
+	line.push_back("╰");
+	line.push_back("─");
+	line.push_back("─");
+	line.push_back("─");
+	line.push_back("─");
+	line.push_back("─");
+	line.push_back("╯");
+	return line;
+}
+
+std::vector<std::vector<std::string> >	Card::getImg() const
+{
+	std::vector<std::vector<std::string> >	img;
+
+	img.push_back(getCardTop());
+	img.push_back(getCardIcon(color_str[_color]));
+	img.push_back(getCardMid(value_str[_value]));
+	img.push_back(getCardRIcon(color_str[_color]));
+	img.push_back(getCardBottom());
 
 	return(img);
 }

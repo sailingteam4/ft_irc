@@ -6,12 +6,12 @@
 #    By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/14 23:42:46 by mbico             #+#    #+#              #
-#    Updated: 2025/05/06 18:29:17 by mbico            ###   ########.fr        #
+#    Updated: 2025/05/09 16:36:21 by mateo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = c++
-CFLAGS = -std=c++98 #-Wall -Werror -Wextra -g
+CFLAGS = -std=c++98 -g #-Wall -Werror -Wextra
 NAME = irc
 NAME_BOT = bot
 

@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 21:55:13 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/08 00:20:17 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/09 16:38:54 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@ Screen::Screen()
 	for (uint32_t y = 0; y < _leny; y ++)
 	{
 		std::string	line = "";
+		_screen.push_back(std::vector<std::string>());
 		for (uint32_t x = 0; x < _lenx; x ++)
-			line += ".";
-		_screen.push_back(line);
+			_screen[y].push_back(".");
 	}
 }
 
 Screen::~Screen(void) {
 }
 
-std::vector<std::string>	Screen::getScreen(void) const {
+std::vector<std::vector<std::string> >	Screen::getScreen(void) const {
 	return(_screen);
 }
 
@@ -47,7 +47,9 @@ void	Screen::printScreen(void) const
 {
 	for (uint32_t y = 0; y < _leny; y ++)
 	{
-		std::cout << _screen[y] << std::endl;
+		for (uint32_t x = 0; x < _lenx; x ++)
+			std::cout << _screen[y][x];
+		std::cout << std::endl;
 	}
 }
 
@@ -55,28 +57,28 @@ void	Screen::displayScreen(int sockfd) const
 {
 	for (uint32_t y = 0; y < _leny; y ++)
 	{
-		std::string	str = privmsg + _screen[y] + "\r\n";
-		send(sockfd, str.c_str(), str.length(), 0);
+		std::string	line = privmsg;
+		for (uint32_t x = 0; x < _lenx; x ++)
+			line += _screen[y][x];
+		line += "\r\n";
+		send(sockfd, line.c_str(), line.length(), 0);
 	}
 }
 
-void	Screen::putImage(std::vector<std::string> img, uint32_t x, uint32_t y)
+void	Screen::putImage(std::vector<std::vector<std::string> > img, uint32_t x, uint32_t y)
 {
 	uint32_t	offset;
 
 	if (x >= _lenx || y >= _leny || y + img.size() >= _leny || x + img[0].size() >= _lenx)
 		return;
+	std::cout << "test"<< std::endl;
 	for (int yr = 0; yr < (int)img.size(); yr ++)
 	{
 		int	xr;
-		for (xr = 0; xr < (int)img[yr].size(); xr ++)
+		for (xr = 0; xr < img[yr].size(); xr ++)
 		{
 			_screen[y + yr][x + xr] = img[yr][xr];
 		}
-		/* offset = countSymbole(img[yr]); */
-		/* for (int i = 0; i < offset; i ++) */
-		/* 	_screen[y + yr].insert(x + xr + i, BACKGROUND); */
 	}
-	for (int i = 0; i < (int)_screen.size(); i ++)
-		std::cout << _screen[i] << std::endl;
 }
+
