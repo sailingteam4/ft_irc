@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 23:43:49 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/09 17:44:30 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/09 18:44:59 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,6 @@ std::vector<std::vector<std::string> >	Card::getImg() const
 							{"│", " ", " ", " ", " ", color_str[_color].c_str(), "│"},
 							{"╰", "─", "─", "─", "─", "─", "╯"}
 	};
-
-	std::cout << color_str[_color].c_str() << std::endl; 
 
 	for (int i = 0; i < 5; i ++)
 		img.push_back(makeLine(card[i], 7));

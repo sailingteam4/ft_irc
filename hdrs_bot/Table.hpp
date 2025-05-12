@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 20:20:07 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/07 21:20:22 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/12 13:48:11 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,39 @@
 #include <cstdlib>
 #include <ctime>
 #include <list>
+
+enum	gameStatus {
+	NOGAME,
+	TABLE_S,
+	SELECT_CARD,
+	SHOP,
+};
+
+enum	pokerHand {
+	HIGH_CARD,
+	PAIR,
+	TWO_PAIR,
+	THREE_OF_A_KIND,
+	STRAIGHT,
+	FLUSH,
+	FULL_HOUSE,
+	FOUR_OF_A_KIND,
+	STRAIGHT_FLUSH,
+} ;
+
+static const uint32_t	pokerHandScore[][2] = {
+	{5, 1},
+	{10, 2},
+	{20, 2},
+	{30, 3},
+	{30, 4},
+	{35, 4},
+	{40, 4},
+	{60, 7},
+	{100, 8}
+};
+
+static const std::string	pokerHandStr[] = {"High Card", "Pair", "Two Pair", "Three of a Kind", "Straight", "Flush", "Full House", "Four of a Kind", "Straight Flush"};
 
 static const uint64_t	initBet[][3] = {{100, 150, 200},\
 				{300, 450, 600},\
@@ -56,11 +89,38 @@ class	Table {
 		~Table(void);
 		void	nextRound(uint32_t round);
 		void	firtHand(Player player);
+		void	addCardtoHand(Player player, uint32_t nb);
 
-		void	displayHand(int sockfd) const;
+		std::vector<Card>	getHand() const;
+		std::vector<Card>	getPlayHand() const;
 
-		std::vector<Card>	getHand();
+		uint32_t			getMult() const;
+		uint32_t			getTokens() const;
+		void				setMult(uint32_t nb);
+		void				setTokens(uint32_t nb);
+		void				addMult(uint32_t nb);
+		void				addTokens(uint32_t nb);
+
+		void				calculateUserScore(Player player);
+
+		void				removeDiscardRemains();
+		void				resetDiscardRemains(Player player);
+		void				removeHandRemains();
+		void				resetHandRemains(Player player);
+		
+		uint32_t			getRound() const;
+		uint32_t			getWinScore() const;
+		uint32_t			getUserScore() const;
+		uint32_t			getHandRemains() const;
+		uint32_t			getDiscardRemains() const;
+
+		void				playHandClear();
+		void				handClear();
+
+		bool	selectHand(std::string response, Table table);
+		void	insertPlayCardinHand();
 };
 
-
 std::vector<Card>	sortValue(std::vector<Card> cards);
+pokerHand			getPokerHand(std::vector<Card> hand);
+void				handValue(Table &table, std::vector<Card> hand, pokerHand ph);

@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 21:55:03 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/09 17:40:29 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/11 17:58:22 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "Card.hpp"
+#include "Player.hpp"
+#include "Table.hpp"
 
 #define	BACKGROUND " "
 
@@ -31,6 +34,11 @@ class	Screen {
 		uint32_t					getLenY() const;
 		void						printScreen(void) const;
 		void						displayScreen(int sockfd) const;
-		void						putImage(std::vector<std::vector<std::string> > img, uint32_t x, uint32_t y);
+		void						clear();
+
+		void	putText(std::string txt, uint32_t x, uint32_t y);
+		void	putImage(std::vector<std::vector<std::string> > img, uint32_t x, uint32_t y);
+		void	putCardList(std::vector<Card> hand, uint32_t x, uint32_t y, bool ind);
+		void	putTable(Table table, Player player);
 };
 

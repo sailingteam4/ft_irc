@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:56:43 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/07 22:42:50 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/10 10:19:13 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int serverInit(uint16_t	port, std::string password) {
 
 void	serverRun(int sockfd)
 {
-
+	gameStatus	game;
     while (true) {
 		if (commandHandle(sockfd))
 			break;

@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 00:32:39 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/09 17:51:19 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/09 18:40:43 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,4 @@ const char RESET_CHAR = 15;
 #define	HEXRED std::string(1, COLOR_CHAR) + "04"
 #define	HEXBLACK std::string(1, COLOR_CHAR) + "01"
 #define	HEXRESET std::string(1, RESET_CHAR)
-
 

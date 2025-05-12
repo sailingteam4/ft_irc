@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 20:33:22 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/07 23:20:39 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/12 13:48:10 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,22 +59,103 @@ void	Table::firtHand(Player player)
 	_hand = sortValue(_hand);
 }
 
-#define	RED_HEC
+void	Table::addCardtoHand(Player player, uint32_t nb)
+{
+	int	randi;
 
-/* void	Table::displayHand(int sockfd) const */
-/* { */
-/* 	std::string	str = "PRIVMSG " CHANNEL " :" + HEXRED; */
-/* 	for (int i = 0; i < (int)_hand.size(); i ++) */
-/* 	{ */
-/* 		str += _hand[i].getStr(); */
-/* 		if (i != (int)_hand.size() - 1) */
-/* 			str += " " + HEXRESET; */
-/* 	} */
-/* 	str += "\r\n"; */
-/* 	std::cout << str << std::endl; */
-/* 	send(sockfd, str.c_str(), str.length(), 0); */
-/* } */
+	for (int i = 0; i < nb; i++)
+	{
+		randi = randint(0, _deck.size() - 1);
+		_hand.push_back(_deck[randi]);
+		_deck.erase(_deck.begin() + randi);
+	}
+	_hand = sortValue(_hand);
 
-std::vector<Card>	Table::getHand() {
+}
+
+std::vector<Card>	Table::getHand() const {
 	return (_hand);
+}
+
+std::vector<Card>	Table::getPlayHand() const {
+	return (_playHand);
+}
+
+uint32_t	Table::getRound() const {
+	return (_round);
+}
+
+uint32_t	Table::getWinScore() const {
+	return (_winScore);
+}
+
+uint32_t	Table::getUserScore() const {
+	return (_userScore);
+}
+
+uint32_t	Table::getHandRemains() const {
+	return (_handRemains);
+}
+
+uint32_t	Table::getDiscardRemains() const {
+	return (_discardRemains);
+}
+
+uint32_t	Table::getMult() const {
+	return (_mult);
+}
+
+uint32_t	Table::getTokens() const {
+	return (_tokens);
+}
+
+void	Table::setMult(uint32_t nb) {
+	_mult = nb;
+}
+
+void	Table::setTokens(uint32_t nb) {
+	_tokens = nb;
+}
+
+void	Table::addMult(uint32_t nb) {
+	_mult += nb;
+}
+
+void	Table::addTokens(uint32_t nb) {
+	_tokens += nb;
+}
+
+void	Table::playHandClear()
+{
+	_playHand.clear();
+}
+
+void	Table::handClear()
+{
+	_hand.clear();
+}
+
+void	Table::calculateUserScore(Player player)
+{
+	_userScore += _tokens * _mult;
+}
+
+void	Table::removeHandRemains()
+{
+	if (_handRemains > 0)
+		_handRemains --;
+}
+
+void	Table::resetHandRemains(Player player) {
+	_handRemains = player.getHandMax();
+}
+
+void	Table::removeDiscardRemains()
+{
+	if (_discardRemains > 0)
+		_discardRemains --;
+}
+
+void	Table::resetDiscardRemains(Player player) {
+	_discardRemains = player.getDiscardMax();
 }
