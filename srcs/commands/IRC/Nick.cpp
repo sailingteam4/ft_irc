@@ -52,6 +52,8 @@ void Server::handleNick(int client_fd, const std::string& message)
         }
     }
     
+    std::string oldNickname = client_nicknames[client_fd];
+    
     client_nicknames[client_fd] = nickname;
     
     if (client_info.find(client_fd) == client_info.end())
@@ -62,7 +64,21 @@ void Server::handleNick(int client_fd, const std::string& message)
     std::string response = "NICK command received. Your nickname is now " + nickname + "\r\n";
     send(client_fd, response.c_str(), response.size(), 0);
 
-    std::cout << "Client socket " << client_fd << " set nickname to: " << nickname << std::endl;
+    std::cout << "Client socket " << client_fd << " changed nickname from: " << 
+        (oldNickname.empty() ? "(unset)" : oldNickname) << " to: " << nickname << std::endl;
+    
+    std::string nickChangeMsg = ":" + oldNickname + "!" SERVER_NAME " NICK :" + nickname + "\r\n";
+    
+    if (!oldNickname.empty())
+    {
+        for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+        {
+            if (it->hasUser(client_fd))
+            {
+                broadcastToChannel(nickChangeMsg, it->getName(), -1);
+            }
+        }
+    }
     
     checkRegistrationStatus(client_fd);
 }
