@@ -5,6 +5,13 @@
 
 void Server::handleUser(int client_fd, const std::string& message)
 {
+    if (client_info.find(client_fd) != client_info.end() && client_info[client_fd].hasUser) {
+        std::string nickname = client_nicknames[client_fd];
+        std::string error = ":" SERVER_NAME " 462 " + nickname + " :You may not reregister\r\n";
+        send(client_fd, error.c_str(), error.size(), 0);
+        return;
+    }
+
     std::string params = message.substr(5);
     
     if (params.find("\r") != std::string::npos)
@@ -15,15 +22,32 @@ void Server::handleUser(int client_fd, const std::string& message)
     size_t colonPos = params.find(" :");
     std::string realname;
     
-    if (colonPos != std::string::npos) {
-        realname = params.substr(colonPos + 2);
-        params = params.substr(0, colonPos);
+    if (colonPos == std::string::npos) {
+        std::string nickname = client_nicknames.count(client_fd) ? client_nicknames[client_fd] : "*";
+        std::string error = ":" SERVER_NAME " 461 " + nickname + " USER :Not enough parameters\r\n";
+        send(client_fd, error.c_str(), error.size(), 0);
+        return;
     }
+    
+    realname = params.substr(colonPos + 2);
+    params = params.substr(0, colonPos);
     
     std::istringstream iss(params);
     std::string username, hostname, servername;
     
-    iss >> username >> hostname >> servername;
+    if (!(iss >> username >> hostname >> servername)) {
+        std::string nickname = client_nicknames.count(client_fd) ? client_nicknames[client_fd] : "*";
+        std::string error = ":" SERVER_NAME " 461 " + nickname + " USER :Not enough parameters\r\n";
+        send(client_fd, error.c_str(), error.size(), 0);
+        return;
+    }
+    
+    if (username.empty() || username.find(' ') != std::string::npos) {
+        std::string nickname = client_nicknames.count(client_fd) ? client_nicknames[client_fd] : "*";
+        std::string error = ":" SERVER_NAME " 432 " + nickname + " :Invalid username\r\n";
+        send(client_fd, error.c_str(), error.size(), 0);
+        return;
+    }
     
     if (client_info.find(client_fd) == client_info.end())
         client_info[client_fd] = UserInfo();
@@ -34,9 +58,6 @@ void Server::handleUser(int client_fd, const std::string& message)
     info.servername = servername;
     info.realname = realname;
     info.hasUser = true;
-    
-    std::string response = "USER command received. Welcome " + username + "!\r\n";
-    send(client_fd, response.c_str(), response.size(), 0);
     
     std::cout << "Client socket " << client_fd << " registered user: " << username << " realname: " << realname << std::endl;
     
