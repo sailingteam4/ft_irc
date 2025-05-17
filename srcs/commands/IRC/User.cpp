@@ -46,7 +46,8 @@ void Server::handleUser(int client_fd, const std::string& message)
 void Server::checkRegistrationStatus(int client_fd)
 {
     if (client_info.find(client_fd) != client_info.end() && 
-        client_info[client_fd].hasNick && client_info[client_fd].hasUser)
+        client_info[client_fd].hasNick && client_info[client_fd].hasUser &&
+        !client_info[client_fd].welcomeSent)
     {
         std::string nickname = client_nicknames[client_fd];
         std::string username = client_info[client_fd].username;
@@ -66,5 +67,7 @@ void Server::checkRegistrationStatus(int client_fd)
         send(client_fd, numeric004.c_str(), numeric004.size(), 0);
         
         std::cout << "Client " << nickname << " (" << username << ") has completed registration" << std::endl;
+        
+        client_info[client_fd].welcomeSent = true;
     }
 }

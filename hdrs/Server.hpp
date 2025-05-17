@@ -25,8 +25,9 @@ struct UserInfo {
     std::string realname;
     bool hasNick;
     bool hasUser;
+    bool welcomeSent;
     
-    UserInfo() : hasNick(false), hasUser(false) {}
+    UserInfo() : hasNick(false), hasUser(false), welcomeSent(false) {}
 };
 
 class Server
