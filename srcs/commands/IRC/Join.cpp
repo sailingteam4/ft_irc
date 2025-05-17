@@ -70,7 +70,11 @@ void Server::handleJoin(int client_fd, const std::string& message)
             continue;
             
         if (single_channel[0] != '#')
-            single_channel = "#" + single_channel;
+        {
+            std::string errorMsg = ":" SERVER_NAME " 403 " + nickname + " " + single_channel + " :Invalid channel name (missing # prefix)\r\n";
+            send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+            continue;
+        }
             
         if (!isValidChannelName(single_channel))
         {
