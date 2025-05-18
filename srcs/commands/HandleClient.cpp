@@ -223,6 +223,9 @@ void Server::handleClientMessage(int client_fd, const std::string& message)
     else
     {
         std::cout << "Unknown command received from client " << client_fd << ": " << message << std::endl;
+		std::string error = ":" SERVER_NAME " 421 " + client_nicknames[client_fd] + " :Unknown command\r\n";
+		send(client_fd, error.c_str(), error.size(), 0);
+		return;
     }
 }
 
