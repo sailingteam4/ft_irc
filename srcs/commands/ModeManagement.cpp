@@ -27,7 +27,7 @@ void Server::handleMode(int client_fd, const std::string& message) {
     if (client_info.find(client_fd) == client_info.end() || 
         !client_info[client_fd].hasNick || !client_info[client_fd].hasUser)
     {
-        std::string errorMsg = ":" SERVER_NAME " 451 :You have not registered\r\n";
+        std::string errorMsg = ERR_NOTREGISTERED(client_nicknames[client_fd]);
         send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
         return;
     }
@@ -152,22 +152,14 @@ int Server::parsmode(int client_fd, const std::string& mode, std::string channel
 		++pars_map[c];
 
 		if ((pars_map[c] > 1 && (c == 'i' || c == 't' || c == 'k' || c == 'o' || c == 'l')) || (c != 'i' && c != 't' && c != 'k' && c != 'o' && c != 'l'))
-		{
-			if (c == 'i' || c == 't' || c == 'k' || c == 'o' || c == 'l' )
-			{
-				//ATTENTION NE PAS METTRE DE CODE D'ERREUR ICI, ON EST DANS LE CAS OU LA COMMANDE EST PAR EXEMPLE +kk DONC COMME IRC DE BASE NA PAS DE CODE DERREUR POUR CA ON EN MET PAS
-				// std::cout << "Erreur mode 1: " << mode << std::endl;
-				//:irc.exemple.com 472 <tonpseudo> o :is unknown mode char to me
-				std::string errorMsg = ":" SERVER_NAME " 472 " + client_nicknames[client_fd] + " " + channelName + " " + c + " :is unknown mode char to me\r\n";
+		{			if (c == 'i' || c == 't' || c == 'k' || c == 'o' || c == 'l' )
+			{				// Emit a warning for duplicate mode characters, using 472 (unknown mode)
+				std::string errorMsg = ERR_UNKNOWNMODE(client_nicknames[client_fd], channelName, std::string(1, c));
 				send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 				return (0);
-			}
-			if (c != 'i' && c != 't' && c != 'k' && c != 'o' && c != 'l')
-			{
-				//METTRE UN CODE DERREUR ICI NORMALEMENT LE 472, C'EST ERROR UNKNOW MODE DANS LA NORME
-				// std::cout << "Erreur mode 2: " << mode << std::endl;
-				//:irc.exemple.com 472 <tonpseudo> o :is unknown mode char to me
-				std::string errorMsg = ":" SERVER_NAME " 472 " + client_nicknames[client_fd] + " " + channelName + " " +  c + " :is unknown mode char to me\r\n";
+			}			if (c != 'i' && c != 't' && c != 'k' && c != 'o' && c != 'l')
+			{				// Send ERR_UNKNOWNMODE (472) for unknown mode characters
+				std::string errorMsg = ERR_UNKNOWNMODE(client_nicknames[client_fd], channelName, std::string(1, c));
 				send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 				return (1);
 			}

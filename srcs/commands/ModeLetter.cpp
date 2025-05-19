@@ -12,7 +12,7 @@ void Server::ModeOperator(char modeLetter, char sign, std::string target_value, 
 	Channel* channel = findChannel(channelName);
 	if (!channel)
 	{
-		std::string errorMsg = ":" SERVER_NAME " 403 " + client_nicknames[client_fd] + " " + channelName + " :No such channel\r\n";
+		std::string errorMsg = ERR_NOSUCHCHANNEL(client_nicknames[client_fd], channelName);
 		send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 		return;
 	}
@@ -23,7 +23,7 @@ void Server::ModeOperator(char modeLetter, char sign, std::string target_value, 
 			int target_client_fd = getClientSocket(target_value);
 			if (target_client_fd == -1)
 			{
-				std::string errorMsg = ":" SERVER_NAME " 441 " + client_nicknames[client_fd] + " " + channelName + " :They aren't on that channel\r\n";
+				std::string errorMsg = ERR_USERNOTINCHANNEL(client_nicknames[client_fd], target_value, channelName);
 				send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 				return;
 			}
@@ -40,7 +40,7 @@ void Server::ModeOperator(char modeLetter, char sign, std::string target_value, 
 			int target_client_fd = getClientSocket(target_value);
 			if (target_client_fd == -1)
 			{
-				std::string errorMsg = ":" SERVER_NAME " 441 " + client_nicknames[client_fd] + " " + channelName + " :They aren't on that channel\r\n";
+				std::string errorMsg = ERR_USERNOTINCHANNEL(client_nicknames[client_fd], target_value, channelName);
 				send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 				return;
 			}
@@ -56,7 +56,7 @@ void Server::ModeOperator(char modeLetter, char sign, std::string target_value, 
 	}
 	else 
 	{
-		std::string errorMsg = ":" SERVER_NAME " 482 " + client_nicknames[client_fd] + " " + channelName + " :You're not channel operator\r\n";
+		std::string errorMsg = ERR_NOTCHANNELOP(client_nicknames[client_fd], channelName);
 		send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 		return;
 	}
@@ -70,14 +70,14 @@ void Server::ModeTopic(char modeLetter, char sign, std::string channelName, int 
 	Channel* channel = findChannel(channelName);
 	if (!channel)
 	{
-		std::string errorMsg = ":" SERVER_NAME " 403 " + client_nicknames[client_fd] + " " + channelName + " :No such channel\r\n";
+		std::string errorMsg = ERR_NOSUCHCHANNEL(client_nicknames[client_fd], channelName);
 		send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 		return;
 	}
 
 	if (channel->isTopicProtected() && !channel->isOperator(client_fd))
 	{
-		std::string errorMsg = ":" SERVER_NAME " 482 " + client_nicknames[client_fd] + " " + channelName + " :You're not channel operator\r\n";
+		std::string errorMsg = ERR_NOTCHANNELOP(client_nicknames[client_fd], channelName);
 		send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 		return;
 	}
@@ -106,7 +106,7 @@ void Server::ModeLimit(char modeLetter, char sign, std::string target_value, std
 	Channel* channel = findChannel(channelName);
 	if (!channel)
 	{
-		std::string errorMsg = ":" SERVER_NAME " 403 " + client_nicknames[client_fd] + " " + channelName + " :No such channel\r\n";
+		std::string errorMsg = ERR_NOSUCHCHANNEL(client_nicknames[client_fd], channelName);
 		send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 		return;
 	}
@@ -116,7 +116,7 @@ void Server::ModeLimit(char modeLetter, char sign, std::string target_value, std
 		{
 			if (target_value.empty())
 			{
-				std::string errorMsg = ":" SERVER_NAME " 461 " + client_nicknames[client_fd] + " " + channelName + " :Not enough parameters\r\n";
+				std::string errorMsg = ERR_NEEDMOREPARAMS(client_nicknames[client_fd], "MODE");
 				send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 				return;
 			}
@@ -125,7 +125,7 @@ void Server::ModeLimit(char modeLetter, char sign, std::string target_value, std
 			unsigned long valeur = strtoul(target_value.c_str(), &endptr, 10);
 			if (*endptr != '\0' || errno != 0 || target_value[0] == '-')
 			{
-				std::string errorMsg = ":" SERVER_NAME " 472 " + client_nicknames[client_fd] + " " + channelName + " +l :Invalid limit parameter\r\n";
+				std::string errorMsg = ERR_UNKNOWNMODE(client_nicknames[client_fd], channelName, "+l");
 				send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 				return;
 			}
@@ -142,13 +142,13 @@ void Server::ModeLimit(char modeLetter, char sign, std::string target_value, std
 		if (sign == '-')
 		{
 			channel->setUserLimit(0);
-			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " " + sign + "l no limit\r\n";
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " " + sign + "l\r\n";
 			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
 			broadcastToChannel(modeMsg, channelName, client_fd);
 			return ;
 		}
 	}
-	std::string errorMsg = ":" SERVER_NAME " 482 " + client_nicknames[client_fd] + " " + channelName + " :You're not channel operator\r\n";
+	std::string errorMsg = ERR_NOTCHANNELOP(client_nicknames[client_fd], channelName);
 	send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 	return;
 }
@@ -161,7 +161,7 @@ void Server::ModeKey(char modeLetter, char sign, std::string target_value, std::
 	Channel* channel = findChannel(channelName);
 	if (!channel)
 	{
-		std::string errorMsg = ":" SERVER_NAME " 403 " + client_nicknames[client_fd] + " " + channelName + " :No such channel\r\n";
+		std::string errorMsg = ERR_NOSUCHCHANNEL(client_nicknames[client_fd], channelName);
 		send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 		return;
 	}
@@ -171,26 +171,26 @@ void Server::ModeKey(char modeLetter, char sign, std::string target_value, std::
 		{
 			if (target_value.empty())
 			{
-				std::string errorMsg = ":" SERVER_NAME " 461 " + client_nicknames[client_fd] + " " + channelName + " :Not enough parameters\r\n";
+				std::string errorMsg = ERR_NEEDMOREPARAMS(client_nicknames[client_fd], "MODE");
 				send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 				return;
 			}
 			channel->setKey(target_value);
-			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " +k " + "new_key" + "\r\n";
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " +k " + target_value + "\r\n";
 			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
 			broadcastToChannel(modeMsg, channelName, client_fd);
 			return;
 		}
 		if (sign == '-')
 		{
-			channel->setKey(target_value);
-			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " -k " + "no_key" + "\r\n";
+			channel->setKey("");
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " -k\r\n";
 			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
 			broadcastToChannel(modeMsg, channelName, client_fd);
 			return;
 		}
 	}
-	std::string errorMsg = ":" SERVER_NAME " 482 " + client_nicknames[client_fd] + " " + channelName + " :You're not channel operator\r\n";
+	std::string errorMsg = ERR_NOTCHANNELOP(client_nicknames[client_fd], channelName);
 	send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 	return;
 }
@@ -203,16 +203,16 @@ void Server::ModeInvitation(char modeLetter, char sign, std::string channelName,
 	Channel* channel = findChannel(channelName);
 	if (!channel)
 	{
-	std::string errorMsg = ":" SERVER_NAME " 403 " + client_nicknames[client_fd] + " " + channelName + " :No such channel\r\n";
-	send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
-	return;
+		std::string errorMsg = ERR_NOSUCHCHANNEL(client_nicknames[client_fd], channelName);
+		send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
+		return;
 	}
 	if (channel->isOperator(client_fd))
 	{
-		if (sign == '+')
+			if (sign == '+')
 		{
 			channel->setInviteOnly(true);
-			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " +i " + "invite_mode" + "\r\n";
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " +i\r\n";
 			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
 			broadcastToChannel(modeMsg, channelName, client_fd);
 			return;
@@ -220,13 +220,13 @@ void Server::ModeInvitation(char modeLetter, char sign, std::string channelName,
 		if (sign == '-')
 		{
 			channel->setInviteOnly(false);
-			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " -i " + "no_invite_mode" + "\r\n";
+			std::string modeMsg = ":" + client_nicknames[client_fd] + " MODE " + channelName + " -i\r\n";
 			send(client_fd, modeMsg.c_str(), modeMsg.size(), 0);
 			broadcastToChannel(modeMsg, channelName, client_fd);
 			return;
 		}
 	}
-	std::string errorMsg = ":" SERVER_NAME " 482 " + client_nicknames[client_fd] + " " + channelName + " :You're not channel operator\r\n";
+	std::string errorMsg = ERR_NOTCHANNELOP(client_nicknames[client_fd], channelName);
 	send(client_fd, errorMsg.c_str(), errorMsg.size(), 0);
 	return;
 }

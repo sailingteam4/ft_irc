@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
+/*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 15:38:51 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/05 17:39:30 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/19 14:43:21 by nrontey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 #define	ERR_NOSUCHNICK(username, target) ":" SERVER_NAME " 401 " + username + " " + target + " :No such nick/channel\r\n"
 #define	ERR_NOSUCHCHANNEL(username, channel_name) ":" SERVER_NAME " 403 " + username + " " + channel_name + " :No such channel\r\n"
 #define ERR_USERNOTINCHANNEL(username, target, channel_name) ":" SERVER_NAME " 441 " + username + " " + target + " " + channel_name + " :They aren't on that channel\r\n"
-#define	ERR_NOTONCHANNEL(username, channel_name) ":" SERVER_NAME " 442 " + username + " " + channel_name + " : You're not on that channel\r\n"
+#define	ERR_NOTONCHANNEL(username, channel_name) ":" SERVER_NAME " 442 " + username + " " + channel_name + " :You're not on that channel\r\n"
 #define	ERR_USERONCHANNEL(username, target, channel_name) ":" SERVER_NAME " 443 " + username + " " + target + " " + channel_name + " :is already on channel\r\n"
 #define	ERR_NOTREGISTERED(username) ":" SERVER_NAME " 451 :You have not registered\r\n"
-#define	ERR_NEEDMOREPARAMS(username, command) ":" SERVER_NAME " 461" + username + " " command + " :Not enough parameters\r\n"
+#define	ERR_NEEDMOREPARAMS(username, command) ":" SERVER_NAME " 461 " + username + " " + command + " :Not enough parameters\r\n"
 #define	ERR_NOTCHANNELOP(username, channel_name) ":" SERVER_NAME " 482 " + username + " " + channel_name + " :You're not channel operator\r\n"
 
 //joinErr
@@ -39,7 +39,7 @@
 #define	ERR_NOTEXTTOSEND ":" SERVER_NAME " 412 :No text to send\r\n"
 
 //modeErr
-#define	ERR_UNKNOWNMODE(username, channel_name) ":" SERVER_NAME " 472 " + username + " " + channel_name + " :ERROR UNKNOWN MODE\r\n"
+#define	ERR_UNKNOWNMODE(username, channel_name, mode) ":" SERVER_NAME " 472 " + username + " " + channel_name + " " + mode + " :is unknown mode char to me\r\n"
 
 enum	errno_irc_code {
 	NO_ERROR = 0,
