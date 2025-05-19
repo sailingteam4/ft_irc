@@ -84,12 +84,12 @@ void Server::ModeTopic(char modeLetter, char sign, std::string channelName, int 
 
 	if (sign == '+')
 	{
-		channel->setTopicProtected(false);
+		channel->setTopicProtected(true);
 		std::cout << "Topic protection enabled for channel: " << channelName << std::endl;
 	}
 	else if (sign == '-')
 	{
-		channel->setTopicProtected(true);
+		channel->setTopicProtected(false);
 		std::cout << "Topic protection disabled for channel: " << channelName << std::endl;
 	}
 
