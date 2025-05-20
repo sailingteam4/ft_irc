@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 10:21:02 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/20 16:51:05 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/20 18:07:19 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	gameHandle(int sockfd, fd_set master)
 		{
 			screen.displayScreen(sockfd);
 		}
-		else if (response.find(TAG "use ") != std::string::npos && use(screen, table, player, response))
+		else if (response.find(TAG "use ") != std::string::npos && use(table, player, response))
 		{	
 			screen.refresh(table, player, game);
 			screen.displayScreen(sockfd);

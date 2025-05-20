@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 10:03:36 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/20 16:04:51 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/20 18:03:47 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ std::vector<PlayingCard>	removeCardWithIndexLst(std::vector<PlayingCard> hand, s
 {
 	std::sort(indLst.begin(), indLst.end(), std::greater<int>());
 	
-	for (int i = 0; i < indLst.size(); i ++) {
+	for (int i = 0; i < (int)indLst.size(); i ++) {
 		int idx = indLst[i];
-		if (idx >= 0 && idx < hand.size())
+		if (idx >= 0 && idx < (int)hand.size())
 			hand.erase(hand.begin() + idx);
 	}
 	return (hand);
@@ -62,10 +62,10 @@ bool	Table::selectHand(std::string response, Table table)
 	std::string	arg = response.substr(response.find("!select ") + 8);
 	std::vector<int>	iCardLst;
 
-	if (!parseArgs(arg, iCardLst, table.getHand().size())) {
+	if (!parseArgs(arg, iCardLst, (int)table.getHand().size())) {
 		return true;
 	}
-	for (int i = 0; i < iCardLst.size(); i ++)
+	for (int i = 0; i < (int)iCardLst.size(); i ++)
 		_playHand.push_back(_hand[iCardLst[i]]);
 	_hand = removeCardWithIndexLst(_hand, iCardLst);
 	return (false);

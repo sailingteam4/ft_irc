@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 02:23:29 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/20 15:39:18 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/20 17:51:21 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 bool	isFiveofaKind(std::vector<PlayingCard> hand)
 {
-	if (hand.size() != 5)
+	if ((int)hand.size() != 5)
 		return true;
 	for (int i = 0; i < 5; i ++) {
 		if (hand[0].getValue() != hand[i].getValue())
@@ -28,7 +28,7 @@ bool	isFiveofaKind(std::vector<PlayingCard> hand)
 
 bool	isFlush(std::vector<PlayingCard> hand)
 {
-	if (hand.size() != 5)
+	if ((int)hand.size() != 5)
 		return false;
 	for (int i = 0; i < 5; i ++) {
 		if (hand[0].getColor() != hand[i].getColor())
@@ -39,7 +39,7 @@ bool	isFlush(std::vector<PlayingCard> hand)
 
 bool	isStraight(std::vector<PlayingCard> hand)
 {
-	if (hand.size() != 5)
+	if ((int)hand.size() != 5)
 		return (false);
 	if (hand[0].getValue() == AS &&
 		hand[1].getValue() == KING &&
@@ -65,7 +65,7 @@ bool	isStraightFlush(std::vector<PlayingCard> hand)
 
 bool	isFullHouse(std::vector<PlayingCard> hand)
 {
-	if (hand.size() != 5)
+	if ((int)hand.size() != 5)
 		return (false);
 	int	occ1 = countCardOcc(hand, hand[0].getValue());
 	int	occ2 = countCardOcc(hand, hand[3].getValue());
@@ -75,13 +75,13 @@ bool	isFullHouse(std::vector<PlayingCard> hand)
 }
 
 bool isTwoPair(std::vector<PlayingCard> hand) {
-	if (hand.size() < 4)
+	if ((int)hand.size() < 4)
 		return false;
 
 	int pairCount = 0;
 	int i = 0;
 
-	while (i < hand.size() - 1)
+	while (i < (int)hand.size() - 1)
 	{
 		if (hand[i].getValue() == hand[i + 1].getValue())
 		{
@@ -96,9 +96,9 @@ bool isTwoPair(std::vector<PlayingCard> hand) {
 
 bool	isFourofaKind(std::vector<PlayingCard> hand)
 {
-	if (hand.size() < 4)
+	if ((int)hand.size() < 4)
 		return (false);
-	for (int i = 0; i < hand.size(); i ++)
+	for (int i = 0; i < (int)hand.size(); i ++)
 	{
 		if (countCardOcc(hand, hand[i].getValue()) == 4)
 			return true;
@@ -108,9 +108,9 @@ bool	isFourofaKind(std::vector<PlayingCard> hand)
 
 bool	isThreeofaKind(std::vector<PlayingCard> hand)
 {
-	if (hand.size() < 3)
+	if ((int)hand.size() < 3)
 		return (false);
-	for (int i = 0; i < hand.size(); i ++)
+	for (int i = 0; i < (int)hand.size(); i ++)
 	{
 		if (countCardOcc(hand, hand[i].getValue()) == 3)
 			return true;
@@ -120,9 +120,9 @@ bool	isThreeofaKind(std::vector<PlayingCard> hand)
 
 bool	isPair(std::vector<PlayingCard> hand)
 {
-	if (hand.size() < 2)
+	if ((int)hand.size() < 2)
 		return (false);
-	for (int i = 0; i < hand.size(); i ++)
+	for (int i = 0; i < (int)hand.size(); i ++)
 	{
 		if (countCardOcc(hand, hand[i].getValue()) == 2)
 			return true;
@@ -132,7 +132,7 @@ bool	isPair(std::vector<PlayingCard> hand)
 
 bool	isFlushHouse(std::vector<PlayingCard> hand)
 {
-	if (hand.size() != 5)
+	if ((int)hand.size() != 5)
 		return false;
 	if (isFullHouse(hand) && isFlush(hand))
 		return true;
@@ -141,7 +141,7 @@ bool	isFlushHouse(std::vector<PlayingCard> hand)
 
 bool	isFlushFive(std::vector<PlayingCard> hand)
 {
-	if (hand.size() != 5)
+	if ((int)hand.size() != 5)
 		return false;
 	if (isFiveofaKind(hand) && isFlush(hand))
 		return true;
@@ -150,7 +150,7 @@ bool	isFlushFive(std::vector<PlayingCard> hand)
 
 pokerHand	getPokerHand(std::vector<PlayingCard> hand)
 {
-	if (hand.size() > 5)
+	if ((int)hand.size() > 5)
 		return HIGH_CARD;
 
 	hand = sortValue(hand);

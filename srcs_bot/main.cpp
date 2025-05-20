@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:56:43 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/20 17:02:46 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/20 18:11:35 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,13 @@ int serverInit(uint16_t	port, std::string password) {
 		close(sockfd);
         return -1;
     }
-    std::string login = "PASS " + password + "\r\nNICK " + "bot" + "\r\nUSER " + "bot" + NAME "\r\n";
+    std::string login = "PASS " + password + "\r\nNICK " + "bot" + "\r\nUSER bot 0 * :" + "bot" + NAME "\r\n";
     send(sockfd, login.c_str(), login.length(), 0);
 	return (sockfd);
 }
 
 void	serverRun(int sockfd, fd_set master)
 {
-	gameStatus	game;
     while (!stopServer) {
 		if (commandHandle(sockfd, master))
 			break;
@@ -75,7 +74,7 @@ int	main(int argc, char *argv[])
 	uint16_t	port;
 	std::string	password;
 	int16_t		sockfd;
-	fd_set	master;
+	fd_set		master;
 
 	std::signal(SIGINT, signalHandler);
 	try {

@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 20:20:07 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/20 15:31:38 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/20 18:00:35 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ class	Table {
 		~Table(void);
 		void	nextRound(Player player);
 		void	firtHand(Player player);
-		void	addCardtoHand(Player player, uint32_t nb);
+		void	addCardtoHand(uint32_t nb);
 
 		std::vector<PlayingCard>	getHand() const;
 		std::vector<PlayingCard>	getPlayHand() const;
@@ -86,7 +86,7 @@ class	Table {
 		void				setRollCost(uint32_t nb);
 		void				addRollCost(uint32_t nb);
 
-		void				calculateUserScore(Player player);
+		void				calculateUserScore();
 
 		void				removeDiscardRemains();
 		void				resetDiscardRemains(Player player);

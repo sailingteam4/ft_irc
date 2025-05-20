@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 21:55:03 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/19 07:59:45 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/20 17:58:00 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ class	Screen {
 		void	putTable(Table table, Player player);
 		int32_t	putWinScreen(Table table, Player player);
 		void	putGameOver(Table table, Player player);
-		void	putShopCard(Table table, Player player, uint32_t x, uint32_t y);
+		void	putShopCard(Table table, uint32_t x, uint32_t y);
 		void	putShop(Table table, Player player);
-		void	putConsom(Table table, Player player, uint32_t x, uint32_t y);
+		void	putConsom(Player player, uint32_t x, uint32_t y);
 		void	refresh(Table table, Player player, gameStatus gs);
 };
 

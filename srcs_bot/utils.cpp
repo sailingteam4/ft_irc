@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 23:59:18 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/20 16:30:09 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/20 18:05:36 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ std::string intToString(int n) {
 int	countCardOcc(std::vector<PlayingCard> hand, int val) {
 	int	nb = 0;
 
-	for (int i = 0; i < hand.size(); i ++)
+	for (int i = 0; i < (int)hand.size(); i ++)
 	{
 		if (hand[i].getValue() == val)
 			nb ++;

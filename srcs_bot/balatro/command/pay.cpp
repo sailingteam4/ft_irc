@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 06:02:53 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/19 07:08:14 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/20 18:04:03 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static bool	parse(uint32_t money, std::vector<Card *> shop, std::string arg)
 	long val = std::strtol(arg.c_str(), NULL, 10);
 	if (val < std::numeric_limits<int>::min() || val > std::numeric_limits<int>::max())
 		return false;
-	if (val >= shop.size())
+	if (val >= (int)shop.size())
 		return false;
 	if (money < shop[val]->getPrice())
 		return (false);

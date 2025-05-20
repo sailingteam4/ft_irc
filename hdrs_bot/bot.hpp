@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 17:38:43 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/20 16:44:39 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/20 18:02:48 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,4 @@ bool		selectc(Screen &screen, Table &table, Player &player, std::string response
 void		deselect(Screen &screen, Table &table, Player &player);
 void		play(Screen &screen, Table &table, Player &player);
 void		discard(Screen &screen, Table &table, Player &player);
-bool		use(Screen &screen, Table &table, Player &player, std::string response);
+bool		use(Table &table, Player &player, std::string response);

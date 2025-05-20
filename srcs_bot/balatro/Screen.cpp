@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 21:55:13 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/19 08:04:22 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/20 17:58:57 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	Screen::displayScreen(int sockfd) const
 
 void	Screen::putText(std::string txt, uint32_t x, uint32_t y)
 {
-		if (x >= _lenx || y >= _leny || x + txt.size() >= _lenx)
+		if (x >= _lenx || y >= _leny || x + (int)txt.size() >= _lenx)
 			return;
 		for (int xr = 0; xr < (int)txt.size(); xr ++)
 		{
@@ -80,14 +80,12 @@ void	Screen::putText(std::string txt, uint32_t x, uint32_t y)
 
 void	Screen::putImage(std::vector<std::vector<std::string> > img, uint32_t x, uint32_t y)
 {
-	uint32_t	offset;
-
-	if (x >= _lenx || y >= _leny || y + img.size() >= _leny || x + img[0].size() >= _lenx)
+	if (x >= _lenx || y >= _leny || y + (int)img.size() >= _leny || x + (int)img[0].size() >= _lenx)
 		return;
 	for (int yr = 0; yr < (int)img.size(); yr ++)
 	{
 		int	xr;
-		for (xr = 0; xr < img[yr].size(); xr ++)
+		for (xr = 0; xr < (int)img[yr].size(); xr ++)
 		{
 			_screen[y + yr][x + xr] = img[yr][xr];
 		}
@@ -101,7 +99,7 @@ void	Screen::putCardList(std::vector<PlayingCard> hand, uint32_t x, uint32_t y, 
 	(*this).putImage(hand[0].getImg(), x, y);
 	if (ind)
 		(*this).putText("[0]", x + 2, y + 5);
-	for (int i = 0; i < hand.size() - 1; i++)
+	for (int i = 0; i < (int)hand.size() - 1; i++)
 	{	
 		(*this).putImage(hand[i + 1].getCovertImg(), x + 7 + (4 * i), y);
 		if (ind)
@@ -131,7 +129,7 @@ void	Screen::putTable(Table table, Player player)
 	(*this).putText(intToString(table.getReward()), 12, 6);
 	(*this).putText(intToString(table.getWinScore()), 8, 5);
 	(*this).putText("$" + intToString(player.getMoney()), 12, 19);
-	this->putConsom(table, player, 62, 1);
+	this->putConsom(player, 62, 1);
 
 	(*this).putText(intToString(table.getMult()), 14, 14);
 	(*this).putText(intToString(table.getTokens()), 3, 14);
@@ -161,7 +159,7 @@ int32_t	Screen::putWinScreen(Table table, Player player)
 
 	(*this).putText(intToString(table.getMult()), 14, 14);
 	(*this).putText(intToString(table.getTokens()), 3, 14);
-	this->putConsom(table, player, 62, 1);
+	this->putConsom(player, 62, 1);
 
 	this->putText("YOU WIN", 25, 9);
 	this->putText("- reward : $" + intToString(table.getReward()), 25, 10);
@@ -187,7 +185,7 @@ void	Screen::putGameOver(Table table, Player player)
 	(*this).putText(intToString(table.getReward()), 12, 6);
 	(*this).putText(intToString(table.getWinScore()), 8, 5);
 	(*this).putText("$" + intToString(player.getMoney()), 12, 19);
-	this->putConsom(table, player, 62, 1);
+	this->putConsom(player, 62, 1);
 
 	(*this).putText(intToString(table.getMult()), 14, 14);
 	(*this).putText(intToString(table.getTokens()), 3, 14);
@@ -196,24 +194,24 @@ void	Screen::putGameOver(Table table, Player player)
 	this->putText("type \"!balatro\" to retry.", 25, 10);
 }
 
-void	Screen::putShopCard(Table table, Player player, uint32_t x, uint32_t y)
+void	Screen::putShopCard(Table table, uint32_t x, uint32_t y)
 {
 	if (x >= _lenx || y >= _leny || y + 5 >= _leny)
 		return;
-	for (int i = 0; i < table.getShop().size(); i++)
+	for (int i = 0; i < (int)table.getShop().size(); i++)
 	{	
 		(*this).putImage(table.getShop()[i]->getImg(), x + (7 * i), y);
 		(*this).putText("[" + intToString(i) + "] $" + intToString(table.getShop()[i]->getPrice()), x + (7 * i), y + 5);
 	}
 }
 
-void	Screen::putConsom(Table table, Player player, uint32_t x, uint32_t y)
+void	Screen::putConsom(Player player, uint32_t x, uint32_t y)
 {
 	std::vector<Card *> cards = player.getConsomCard();
 
 	if (x >= _lenx || y >= _leny || y + 5 >= _leny)
 		return;
-	for (int i = 0; i < cards.size(); i++)
+	for (int i = 0; i < (int)cards.size(); i++)
 	{	
 		(*this).putImage(cards[i]->getImg(), x + (7 * i), y);
 		(*this).putText("[" + intToString(i) + "]", x + 2 + (7 * i), y + 5);
@@ -231,9 +229,9 @@ void	Screen::putShop(Table table, Player player)
 
 	(*this).putText(intToString(table.getMult()), 14, 14);
 	(*this).putText(intToString(table.getTokens()), 3, 14);
-	this->putConsom(table, player, 62, 1);
+	this->putConsom(player, 62, 1);
 
-	this->putShopCard(table, player, 42, 11);
+	this->putShopCard(table, 42, 11);
 	this->putText("to \"!roll\" pay $" + intToString(table.getRollCost()), 22, 13);
 	this->putText("SHOP", 22, 9);
 	this->putText("----------------------------", 22, 10);

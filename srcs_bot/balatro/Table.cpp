@@ -6,7 +6,7 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 20:33:22 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/20 15:32:40 by mbico            ###   ########.fr       */
+/*   Updated: 2025/05/20 18:00:49 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,11 @@ void	Table::firtHand(Player player)
 	_hand = sortValue(_hand);
 }
 
-void	Table::addCardtoHand(Player player, uint32_t nb)
+void	Table::addCardtoHand(uint32_t nb)
 {
 	int	randi;
 
-	for (int i = 0; i < nb; i++)
+	for (int i = 0; i < (int)nb; i++)
 	{
 		randi = randint(0, _deck.size() - 1);
 		_hand.push_back(_deck[randi]);
@@ -156,7 +156,7 @@ void	Table::handClear()
 	_hand.clear();
 }
 
-void	Table::calculateUserScore(Player player)
+void	Table::calculateUserScore()
 {
 	_userScore += _tokens * _mult;
 }
@@ -199,7 +199,7 @@ void	Table::addRemainPlanet(PlanetCard pc)
 }
 
 void	Table::rollShop() {
-	for (int i = 0; i < _shop.size(); i ++)
+	for (int i = 0; i < (int)_shop.size(); i ++)
 	{
 		if (_shop[i]->getType() == PLANET_CARD)
 		{

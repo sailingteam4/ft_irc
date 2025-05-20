@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 06:02:53 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/19 08:15:43 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/20 18:02:39 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ static bool	parse(std::vector<Card *> consom, std::string arg)
 	long val = std::strtol(arg.c_str(), NULL, 10);
 	if (val < std::numeric_limits<int>::min() || val > std::numeric_limits<int>::max())
 		return false;
-	if (val >= consom.size())
+	if (val >= (long)consom.size())
 		return false;
 	return true;
 
 }
 
-bool	use(Screen &screen, Table &table, Player &player, std::string response)
+bool	use(Table &table, Player &player, std::string response)
 {
 	std::string	arg = response.substr(response.find("!use ") + 5);
 	if (!parse(player.getConsomCard(), arg))
