@@ -6,16 +6,16 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:52:14 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/12 13:14:48 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/20 17:50:08 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Table.hpp"
 #include "bot.hpp"
 
-bool	highestCard(Card c, std::vector<Card> hand)
+bool	highestCard(PlayingCard c, std::vector<PlayingCard> hand)
 {
-	for (int i = 0; i < hand.size(); i ++)
+	for (int i = 0; i < (int)hand.size(); i ++)
 	{
 		if (c.getValue() < hand[i].getValue() && c.getValue() != 1)
 			return (false);
@@ -23,7 +23,7 @@ bool	highestCard(Card c, std::vector<Card> hand)
 	return (true);
 }
 
-bool	isCardBuff(Card c, std::vector<Card> hand, pokerHand ph)
+bool	isCardBuff(PlayingCard c, std::vector<PlayingCard> hand, pokerHand ph)
 {
 	int	occ = countCardOcc(hand, c.getValue());
 
@@ -38,9 +38,9 @@ bool	isCardBuff(Card c, std::vector<Card> hand, pokerHand ph)
 	return (true);
 }
 
-void	handValue(Table &table, std::vector<Card> hand, pokerHand ph)
+void	handValue(Table &table, std::vector<PlayingCard> hand, pokerHand ph)
 {
-	for (int i = 0; i < hand.size(); i ++)
+	for (int i = 0; i < (int)hand.size(); i ++)
 	{
 		if (isCardBuff(hand[i], hand, ph))
 		{

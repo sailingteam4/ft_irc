@@ -6,13 +6,13 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 20:20:07 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/12 13:48:11 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/20 18:00:35 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "Card.hpp"
+#include "PlayingCard.hpp"
 #include "Player.hpp"
 #include <stdint.h>
 #include <vector>
@@ -25,31 +25,8 @@ enum	gameStatus {
 	NOGAME,
 	TABLE_S,
 	SELECT_CARD,
+	WIN_SCREEN,
 	SHOP,
-};
-
-enum	pokerHand {
-	HIGH_CARD,
-	PAIR,
-	TWO_PAIR,
-	THREE_OF_A_KIND,
-	STRAIGHT,
-	FLUSH,
-	FULL_HOUSE,
-	FOUR_OF_A_KIND,
-	STRAIGHT_FLUSH,
-} ;
-
-static const uint32_t	pokerHandScore[][2] = {
-	{5, 1},
-	{10, 2},
-	{20, 2},
-	{30, 3},
-	{30, 4},
-	{35, 4},
-	{40, 4},
-	{60, 7},
-	{100, 8}
 };
 
 static const std::string	pokerHandStr[] = {"High Card", "Pair", "Two Pair", "Three of a Kind", "Straight", "Flush", "Full House", "Four of a Kind", "Straight Flush"};
@@ -77,22 +54,28 @@ class	Table {
 		uint32_t	_userScore;
 		uint32_t	_handRemains;
 		uint32_t	_discardRemains;
+		uint32_t	_rollCost;
+
+		uint32_t	_reward;
 
 		uint32_t	_mult;
 		uint32_t	_tokens;
 
-		std::vector<Card>	_deck;
-		std::vector<Card>	_playHand;
-		std::vector<Card>	_hand;
+		std::vector<PlayingCard>	_deck;
+		std::vector<PlayingCard>	_playHand;
+		std::vector<PlayingCard>	_hand;
+
+		std::vector<Card *>			_shop;
+		std::vector<PlanetCard>	_remainPlanet;
 	public :
 		Table(Player player);
 		~Table(void);
-		void	nextRound(uint32_t round);
+		void	nextRound(Player player);
 		void	firtHand(Player player);
-		void	addCardtoHand(Player player, uint32_t nb);
+		void	addCardtoHand(uint32_t nb);
 
-		std::vector<Card>	getHand() const;
-		std::vector<Card>	getPlayHand() const;
+		std::vector<PlayingCard>	getHand() const;
+		std::vector<PlayingCard>	getPlayHand() const;
 
 		uint32_t			getMult() const;
 		uint32_t			getTokens() const;
@@ -100,27 +83,40 @@ class	Table {
 		void				setTokens(uint32_t nb);
 		void				addMult(uint32_t nb);
 		void				addTokens(uint32_t nb);
+		void				setRollCost(uint32_t nb);
+		void				addRollCost(uint32_t nb);
 
-		void				calculateUserScore(Player player);
+		void				calculateUserScore();
 
 		void				removeDiscardRemains();
 		void				resetDiscardRemains(Player player);
 		void				removeHandRemains();
 		void				resetHandRemains(Player player);
+		void				updateReward();
+		void				soldShopCard(uint32_t ind);
 		
 		uint32_t			getRound() const;
 		uint32_t			getWinScore() const;
 		uint32_t			getUserScore() const;
 		uint32_t			getHandRemains() const;
 		uint32_t			getDiscardRemains() const;
+		uint32_t			getReward() const;
+		std::vector<Card *>			getShop() const;
+		uint32_t			getRollCost() const;
+
 
 		void				playHandClear();
 		void				handClear();
 
 		bool	selectHand(std::string response, Table table);
 		void	insertPlayCardinHand();
+		void	rollShop();
+		void	addRemainPlanet(PlanetCard pc);
+
+		void	clearShop();
+		void	free();
 };
 
-std::vector<Card>	sortValue(std::vector<Card> cards);
-pokerHand			getPokerHand(std::vector<Card> hand);
-void				handValue(Table &table, std::vector<Card> hand, pokerHand ph);
+std::vector<PlayingCard>	sortValue(std::vector<PlayingCard> cards);
+pokerHand			getPokerHand(std::vector<PlayingCard> hand);
+void				handValue(Table &table, std::vector<PlayingCard> hand, pokerHand ph);

@@ -6,30 +6,20 @@
 /*   By: mbico <mbico@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 19:27:17 by mbico             #+#    #+#             */
-/*   Updated: 2025/05/12 12:39:55 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/20 16:25:14 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bot.hpp"
 #include "Table.hpp"
-#include "Card.hpp"
 #include "Screen.hpp"
+#include <sys/select.h>
 
 
-void	test(int sockfd)
+int	commandHandle(int32_t sockfd, fd_set master)
 {
-	Player	player;
-	Table	table(player);
-	Screen	screen;
-	table.firtHand(player);
-	screen.putTable(table, player);
-	screen.displayScreen(sockfd);
-}
-
-int	commandHandle(int32_t sockfd)
-{
-	std::string response = getResponse(sockfd);
-    if (response.find(TAG "PING") != std::string::npos) {
+	std::string response = getResponse(sockfd, master);
+    if (response.find(TAG "ping") != std::string::npos) {
 		std::string pong = "PRIVMSG " CHANNEL " :PONG\r\n";
 		send(sockfd, pong.c_str(), pong.length(), 0);
 	}
@@ -37,13 +27,13 @@ int	commandHandle(int32_t sockfd)
 		std::string joinCmd = "JOIN " CHANNEL "\r\n";
 		send(sockfd, joinCmd.c_str(), joinCmd.length(), 0);
 	}
-	if (response.find(TAG "test") != std::string::npos)
+	if (response.find(TAG "exit") != std::string::npos)
 	{
-		test(sockfd);
+		return (1);
 	}
 	if (response.find(TAG "balatro") != std::string::npos)
 	{
-		gameHandle(sockfd);	
+		gameHandle(sockfd, master);	
 	}
 	return (0);
 }

@@ -57,6 +57,17 @@ void Server::handleClientData(int client_fd)
     int bytesReceived = recv(client_fd, buf, 4096, 0);
     if (bytesReceived <= 0)
     {
+        if (client_buffer.find(client_fd) != client_buffer.end() && 
+            !client_buffer[client_fd].empty())
+        {
+            std::string& buffer = client_buffer[client_fd];
+            if (!buffer.empty())
+            {
+                handleClientMessage(client_fd, buffer);
+                buffer.clear();
+            }
+        }
+        
         if (bytesReceived == 0)
         {
             std::cout << "Client socket " << client_fd << " disconnected (EOF/Ctrl+D)" << std::endl;
@@ -83,44 +94,47 @@ void Server::handleClientData(int client_fd)
             }
         }
         
+        client_buffer.erase(client_fd);
         cleanupSocket(client_fd);
         return;
     }
     else
     {
-        std::string message(buf, 0, bytesReceived);
+        if (client_buffer.find(client_fd) == client_buffer.end())
+            client_buffer[client_fd] = "";
+        
+        std::string& buffer = client_buffer[client_fd];
+        buffer.append(buf, bytesReceived);
         
         size_t start = 0;
-        size_t end = message.find("\r\n");
+        size_t end = buffer.find("\r\n");
         
         if (end == std::string::npos)
-            end = message.find("\n");
-            
+            end = buffer.find("\n");
         while (end != std::string::npos)
         {
-            std::string cmd = message.substr(start, end - start);
+            std::string cmd = buffer.substr(start, end - start);
             if (!cmd.empty())
             {
                 handleClientMessage(client_fd, cmd);
             }
             
-            start = end + (message[end] == '\r' ? 2 : 1);
-            if (start >= message.size())
-                break;
-                
-            end = message.find("\r\n", start);
-            if (end == std::string::npos)
-                end = message.find("\n", start);
-        }
-        
-        if (start < message.size())
-        {
-            std::string cmd = message.substr(start);
-            if (!cmd.empty())
+            start = end + (buffer[end] == '\r' ? 2 : 1);
+            if (start >= buffer.size())
             {
-                handleClientMessage(client_fd, cmd);
+                buffer.clear();
+                break;
             }
+            
+            buffer = buffer.substr(start);
+            start = 0;
+            
+            end = buffer.find("\r\n");
+            if (end == std::string::npos)
+                end = buffer.find("\n");
         }
+        if (buffer.empty())
+            client_buffer.erase(client_fd);
     }
 }
 

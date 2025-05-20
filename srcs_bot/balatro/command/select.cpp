@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 10:03:36 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/12 12:33:30 by mateo            ###   ########.fr       */
+/*   Updated: 2025/05/20 18:03:47 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,6 @@
 #include <set>
 #include <limits>
 #include <algorithm>
-
-bool isNumber(const std::string& s) {
-	if (s.empty()) return false;
-
-	std::size_t i = 0;
-	if (s[0] == '-' || s[0] == '+') i++;
-	for (; i < s.size(); ++i)
-		if (!std::isdigit(s[i]))
-			return false;
-	return true;
-}
 
 static bool parseArgs(const std::string& line, std::vector<int>& result, int cardLen) {
 	std::istringstream iss(line);
@@ -44,23 +33,25 @@ static bool parseArgs(const std::string& line, std::vector<int>& result, int car
 
 		int iv = static_cast<int>(val);
 		if (seen.count(iv))
-			return false; // doublon
+			return false;
 		if (val >= cardLen)
 			return false;
 
 		seen.insert(iv);
 		result.push_back(iv);
 	}
+	if (result.size() > 5)
+		return (false);
 	return true;
 }
 
-std::vector<Card>	removeCardWithIndexLst(std::vector<Card> hand, std::vector<int> indLst)
+std::vector<PlayingCard>	removeCardWithIndexLst(std::vector<PlayingCard> hand, std::vector<int> indLst)
 {
 	std::sort(indLst.begin(), indLst.end(), std::greater<int>());
 	
-	for (int i = 0; i < indLst.size(); i ++) {
+	for (int i = 0; i < (int)indLst.size(); i ++) {
 		int idx = indLst[i];
-		if (idx >= 0 && idx < hand.size())
+		if (idx >= 0 && idx < (int)hand.size())
 			hand.erase(hand.begin() + idx);
 	}
 	return (hand);
@@ -71,23 +62,23 @@ bool	Table::selectHand(std::string response, Table table)
 	std::string	arg = response.substr(response.find("!select ") + 8);
 	std::vector<int>	iCardLst;
 
-	if (!parseArgs(arg, iCardLst, table.getHand().size())) {
+	if (!parseArgs(arg, iCardLst, (int)table.getHand().size())) {
 		return true;
 	}
-	for (int i = 0; i < iCardLst.size(); i ++)
+	for (int i = 0; i < (int)iCardLst.size(); i ++)
 		_playHand.push_back(_hand[iCardLst[i]]);
 	_hand = removeCardWithIndexLst(_hand, iCardLst);
 	return (false);
 }
 
-bool	select(Screen &screen, Table &table, Player &player, std::string response)
+bool	selectc(Screen &screen, Table &table, Player &player, std::string response)
 {
 	if (table.selectHand(response, table))
 			return false;
 	pokerHand	ph = getPokerHand(table.getPlayHand());
 	screen.clear();
-	table.setTokens(pokerHandScore[ph][0]);
-	table.setMult(pokerHandScore[ph][1]);
+	table.setTokens(player.getPokerHandScore()[ph][0]);
+	table.setMult(player.getPokerHandScore()[ph][1]);
 	screen.putTable(table, player);
 	screen.putCardList(table.getPlayHand(), 35, 10, false);
 	screen.putText(pokerHandStr[ph], 1, 12);

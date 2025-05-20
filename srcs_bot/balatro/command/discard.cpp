@@ -1,29 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Card.cpp                                           :+:      :+:    :+:   */
+/*   discard.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/19 01:19:22 by mateo             #+#    #+#             */
-/*   Updated: 2025/05/19 06:54:28 by mateo            ###   ########.fr       */
+/*   Created: 2025/05/18 21:22:37 by mateo             #+#    #+#             */
+/*   Updated: 2025/05/20 18:04:53 by mbico            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Card.hpp"
-#include "bot.hpp"
+#include "Table.hpp"
+#include "Screen.hpp"
 
-Card::Card(e_cardtype type, uint32_t price) {
-	_type = type;
-	_price = price;
+void	discard(Screen &screen, Table &table, Player &player)
+{
+	table.playHandClear();
+	table.removeDiscardRemains();
+	table.addCardtoHand(player.getHandSize() - table.getHand().size());
+	screen.clear();
+	screen.putTable(table, player);
+
 }
-
-e_cardtype	Card::getType() const {
-	return (_type);
-}
-
-uint32_t	Card::getPrice() const {
-	return (_price);
-}
-
-

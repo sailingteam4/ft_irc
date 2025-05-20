@@ -92,19 +92,28 @@ void Server::cleanupSocket(int socket_fd)
         }
     }
     
-    for (std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+    
+    std::vector<size_t> emptyChannelsIndexes;
+    for (size_t i = 0; i < channels.size(); ++i)
     {
-        it->removeUser(socket_fd);
+        channels[i].removeUser(socket_fd);
         
-        if (it->getUsers().empty())
+        if (channels[i].getUsers().empty())
         {
-            std::cout << "Removing empty channel: " << it->getName() << std::endl;
-            channels.erase(it);
-            break;
+            std::cout << "Marking empty channel for removal: " << channels[i].getName() << std::endl;
+            emptyChannelsIndexes.push_back(i);
         }
+    }
+    
+    for (std::vector<size_t>::reverse_iterator rit = emptyChannelsIndexes.rbegin(); 
+         rit != emptyChannelsIndexes.rend(); ++rit)
+    {
+        std::cout << "Removing empty channel: " << channels[*rit].getName() << std::endl;
+        channels.erase(channels.begin() + *rit);
     }
     
     client_nicknames.erase(socket_fd);
     client_authenticated.erase(socket_fd);
     client_info.erase(socket_fd);
+    client_buffer.erase(socket_fd);
 }

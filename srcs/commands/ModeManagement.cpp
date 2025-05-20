@@ -67,10 +67,6 @@ void Server::handleMode(int client_fd, const std::string& message) {
 
 	std::vector<std::pair<char, char> > mode_map = handleWhatMode(client_fd, mode, channelName);
 	std::vector<std::pair<char, std::pair<char, std::string> > > target_mode_map;
-	if (mode_map.empty())
-	{
-		std::cout << "ERROR IN std::map" << std::endl;
-	}
 	if (!mode_map.empty())
 	{
 		size_t argIndex = 0;
