@@ -93,7 +93,6 @@ void Server::cleanupSocket(int socket_fd)
     }
     
     
-    // Remove user from all channels and identify empty channels for removal
     std::vector<size_t> emptyChannelsIndexes;
     for (size_t i = 0; i < channels.size(); ++i)
     {
@@ -106,7 +105,6 @@ void Server::cleanupSocket(int socket_fd)
         }
     }
     
-    // Remove empty channels in reverse order to avoid invalidating indexes
     for (std::vector<size_t>::reverse_iterator rit = emptyChannelsIndexes.rbegin(); 
          rit != emptyChannelsIndexes.rend(); ++rit)
     {

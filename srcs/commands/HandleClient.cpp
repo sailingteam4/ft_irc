@@ -57,11 +57,9 @@ void Server::handleClientData(int client_fd)
     int bytesReceived = recv(client_fd, buf, 4096, 0);
     if (bytesReceived <= 0)
     {
-        // Check if there are any pending commands in buffer
         if (client_buffer.find(client_fd) != client_buffer.end() && 
             !client_buffer[client_fd].empty())
         {
-            // Process any buffered commands that might have been terminated with Ctrl+D
             std::string& buffer = client_buffer[client_fd];
             if (!buffer.empty())
             {
@@ -70,7 +68,6 @@ void Server::handleClientData(int client_fd)
             }
         }
         
-        // Handle actual disconnection only after processing buffered commands
         if (bytesReceived == 0)
         {
             std::cout << "Client socket " << client_fd << " disconnected (EOF/Ctrl+D)" << std::endl;
@@ -97,27 +94,23 @@ void Server::handleClientData(int client_fd)
             }
         }
         
-        // Clean up buffer along with other client resources
         client_buffer.erase(client_fd);
         cleanupSocket(client_fd);
         return;
     }
     else
     {
-        // Append new data to existing buffer
         if (client_buffer.find(client_fd) == client_buffer.end())
             client_buffer[client_fd] = "";
         
         std::string& buffer = client_buffer[client_fd];
         buffer.append(buf, bytesReceived);
         
-        // Process complete commands (terminated by \r\n or \n)
         size_t start = 0;
         size_t end = buffer.find("\r\n");
         
         if (end == std::string::npos)
             end = buffer.find("\n");
-              // Process all complete commands in the buffer
         while (end != std::string::npos)
         {
             std::string cmd = buffer.substr(start, end - start);
@@ -126,7 +119,6 @@ void Server::handleClientData(int client_fd)
                 handleClientMessage(client_fd, cmd);
             }
             
-            // Move past the processed command
             start = end + (buffer[end] == '\r' ? 2 : 1);
             if (start >= buffer.size())
             {
@@ -134,16 +126,13 @@ void Server::handleClientData(int client_fd)
                 break;
             }
             
-            // Update buffer to contain only unprocessed data
             buffer = buffer.substr(start);
             start = 0;
             
-            // Check for next command
             end = buffer.find("\r\n");
             if (end == std::string::npos)
                 end = buffer.find("\n");
         }
-          // If buffer is empty after processing, clear it completely
         if (buffer.empty())
             client_buffer.erase(client_fd);
     }

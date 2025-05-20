@@ -43,7 +43,7 @@ class Server
         std::map<int, std::string> client_nicknames;
         std::map<int, bool> client_authenticated;
         std::map<int, UserInfo> client_info;
-        std::map<int, std::string> client_buffer; // Buffer to store incomplete commands
+        std::map<int, std::string> client_buffer;
         fd_set master_set;
         int fdmax;
         
