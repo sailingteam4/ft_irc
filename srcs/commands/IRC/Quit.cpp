@@ -30,6 +30,4 @@ void Server::handleQuit(int client_fd, const std::string& message)
     send(client_fd, response.c_str(), response.size(), 0);
     
     std::cout << "Client " << client_fd << " (" << nickname << ") quit: " << quit_message << std::endl;
-    
-    cleanupSocket(client_fd);
 }
